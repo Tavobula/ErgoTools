@@ -38,6 +38,9 @@ font-size:.9em;color:var(--ink);word-break:break-all}
 .btn{display:inline-block;margin-top:20px;background:var(--accent);color:#fff;text-decoration:none;
 font-weight:600;padding:12px 22px;border-radius:10px}
 .btn:hover{filter:brightness(1.08)}
+.btn+.btn{margin-left:10px}
+.btn-alt{background:transparent;color:var(--accent);border:2px solid var(--accent)}
+.btn-alt:hover{background:var(--accent);color:#fff;filter:none}
 .count{font-size:.9rem;color:var(--ink-2)}
 .count button{background:none;border:none;color:var(--accent);font:inherit;font-weight:600;
 cursor:pointer;text-decoration:underline;padding:0}
@@ -63,10 +66,12 @@ a.plain{color:var(--accent)}
   <div class="card">
     <p style="margin-bottom:4px"><strong>Ruta solicitada:</strong></p>
     <code id="path">—</code>
-    <p style="margin-top:12px;margin-bottom:0">La herramienta disponible es la
-      <strong>Calculadora RULA</strong>, en la página de inicio del sitio.</p>
+    <p style="margin-top:12px;margin-bottom:0">Las herramientas disponibles son la
+      <strong>Calculadora RULA</strong> (miembros superiores) y la
+      <strong>Calculadora REBA</strong> (cuerpo completo).</p>
   </div>
-  <a class="btn" id="home" href="/">Ir a la Calculadora RULA</a>
+  <a class="btn" id="home" href="/">Calculadora RULA</a>
+  <a class="btn btn-alt" id="reba" href="/reba-calculadora.html">Calculadora REBA</a>
   <p class="count" id="count" hidden>Redirigiendo en <span id="secs">5</span> s ·
     <button type="button" id="cancel">cancelar</button></p>
 </main>
@@ -82,6 +87,7 @@ a.plain{color:var(--accent)}
 
   var home = document.getElementById('home');
   home.href = base;
+  document.getElementById('reba').href = base + 'reba-calculadora.html';
   document.getElementById('path').textContent = location.pathname;
 
   var count = document.getElementById('count');

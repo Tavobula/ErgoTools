@@ -74,6 +74,13 @@ button{font:inherit;color:inherit}
 .course-bar .name strong{font-size:1.05rem;font-weight:700}
 .course-bar .name span{font-size:.82rem;opacity:.78}
 .course-bar .tag{margin-left:auto;border:1px solid var(--gold);color:var(--gold);border-radius:999px;padding:3px 12px;font-size:.85rem;font-weight:600}
+/* Switcher between the tools of the site. Relative hrefs so it also works
+   under the GitHub Pages sub-path (/<repositorio>/) and on a custom domain. */
+.course-bar .tools{display:flex;gap:6px;flex:none}
+.course-bar .tools a{color:var(--nav-ink);text-decoration:none;font-size:.85rem;font-weight:600;
+border:1px solid rgba(234,242,250,.32);border-radius:999px;padding:3px 12px}
+.course-bar .tools a:hover,.course-bar .tools a:focus-visible{border-color:var(--gold);color:var(--gold)}
+.course-bar .tools a[aria-current="page"]{background:var(--gold);border-color:var(--gold);color:#0f2540}
 
 .wrap{max-width:1180px;margin:0 auto;padding:0 20px}
 .crumbs{padding:18px 0 4px;color:var(--ink-2);font-size:.9rem}
@@ -269,7 +276,7 @@ footer.site p{max-width:90ch}
 
 @media print{
   body{background:#fff;color:#000;padding-bottom:0}
-  .course-bar .tag,.crumbs,.course-note,details.how,.stepper,.live,.mbar,.nav-btns,.rep-btns,.pane:not([data-pane="4"]){display:none!important}
+  .course-bar .tag,.course-bar .tools,.crumbs,.course-note,details.how,.stepper,.live,.mbar,.nav-btns,.rep-btns,.pane:not([data-pane="4"]){display:none!important}
   .pane[data-pane="4"]{display:block!important}
   .layout{display:block}
   .card,.res-card{break-inside:avoid;border-color:#999}
@@ -293,6 +300,10 @@ footer.site p{max-width:90ch}
       <span>Herramienta de apoyo para la práctica de evaluación postural</span>
     </div>
     <span class="tag">Método RULA</span>
+    <nav class="tools" aria-label="Herramientas del sitio">
+      <a href="index.html" aria-current="page">RULA</a>
+      <a href="reba-calculadora.html">REBA</a>
+    </nav>
   </div>
 </header>
 
