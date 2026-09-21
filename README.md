@@ -1,16 +1,23 @@
-# ErgoTools · Calculadora RULA
+# ErgoTools · Calculadoras RULA y REBA
 
-Static, single-file web tool for the **Taller de Ergonomía e Ingeniería de Métodos** course.
-It scores a posture with the [RULA](https://en.wikipedia.org/wiki/Rapid_upper_limb_assessment)
-method (Rapid Upper Limb Assessment): group A (arm, forearm, wrist, twist), group B (neck,
-trunk, legs), muscle use and force, then the final 1–7 score, the action level and a
-printable/copyable report.
+Static, single-file web tools for the **Taller de Ergonomía e Ingeniería de Métodos** course.
+Each tool scores a posture with an observational method and produces the final score, the action
+level and a printable/copyable report:
+
+| Tool | Method | Scores | URL |
+| --- | --- | --- | --- |
+| **RULA** | [Rapid Upper Limb Assessment](https://en.wikipedia.org/wiki/Rapid_upper_limb_assessment) — upper limbs (arm, forearm, wrist, twist) + neck, trunk, legs, muscle use and force | final 1–7 | <https://tavobula.github.io/ErgoTools/> |
+| **REBA** | [Rapid Entire Body Assessment](https://en.wikipedia.org/wiki/Rapid_Entire_Body_Assessment) — whole body (neck, trunk, legs, both sides' arm/forearm/wrist), load/force, coupling and muscular activity | final 1–15 | <https://tavobula.github.io/ErgoTools/reba-calculadora.html> |
+
+Both tools are cross-linked from the header of each page (the `RULA` / `REBA` switcher), so you can
+move between them without typing a URL.
 
 **Live site:** <https://tavobula.github.io/ErgoTools/>
 
-No build step, no dependencies, no backend — everything (HTML, CSS and JavaScript) lives in
-`index.html`. The only external resource is the IBM Plex font from Google Fonts, and the tool
-degrades to system fonts if it cannot be reached.
+No build step, no dependencies, no backend — each tool is self-contained (HTML, CSS and JavaScript
+in one file). The only external resource is the IBM Plex font from Google Fonts, and the tools
+degrade to system fonts if it cannot be reached. The favicon is an inline SVG data URI, so there is
+no extra request and no `/favicon.ico` 404.
 
 ## Why it did not work before
 
@@ -22,14 +29,20 @@ Reason: Pages looks for an `index.html` at the root of the published folder, and
 the repository was `rula-calculadora.html`. The app was reachable *only* through its full filename,
 so the site URL itself was broken.
 
+The REBA tool was added later as `reba-calculadora.html`. It was served correctly at its full
+filename, but it was an **orphan page**: nothing in the site linked to it, it did not link back, it
+had no favicon (so every visit fired a 404 request for `/ErgoTools/favicon.ico`) and no meta
+description or Open Graph tags. It is now a first-class page of the site.
+
 ## What changed
 
 | File | Purpose |
 | --- | --- |
-| `index.html` | The tool, renamed from `rula-calculadora.html` so Pages serves it at the site root. Git tracks it as a rename, so history is preserved. Added a favicon (inline SVG data URI, so no extra request and no `/favicon.ico` 404), a meta description, `color-scheme`/`theme-color` and Open Graph tags. |
+| `index.html` | The RULA tool, renamed from `rula-calculadora.html` so Pages serves it at the site root. Git tracks it as a rename, so history is preserved. Added a favicon (inline SVG data URI), a meta description, `color-scheme`/`theme-color`, Open Graph tags and the `RULA` / `REBA` switcher in the header. |
+| `reba-calculadora.html` | The REBA tool. Added the same head metadata as `index.html` (inline SVG favicon, meta description, `color-scheme`/`theme-color`, Open Graph) and the `RULA` / `REBA` switcher in the header, so the page is reachable from the site and stops requesting a missing `/favicon.ico`. |
 | `.nojekyll` | Tells Pages to publish the files as-is instead of running them through Jekyll/Liquid. The site is plain static HTML, so this removes a build step and avoids any chance of Jekyll rewriting markup. |
-| `rula-calculadora.html` | Tiny redirect stub → `index.html`. This deep URL is the *only* one that works today (`https://tavobula.github.io/ErgoTools/rula-calculadora.html`), so it is kept alive instead of being deleted: bookmarks, shared links and course material pointing at it keep working. |
-| `404.html` | Custom, on-brand 404 (replaces GitHub's generic one). It resolves the site base path itself, so it works even when the missing URL is nested, and offers a redirect back to the calculator. |
+| `rula-calculadora.html` | Tiny redirect stub → `index.html`. This deep URL is the *only* one that worked originally (`https://tavobula.github.io/ErgoTools/rula-calculadora.html`), so it is kept alive instead of being deleted: bookmarks, shared links and course material pointing at it keep working. |
+| `404.html` | Custom, on-brand 404 (replaces GitHub's generic one). It resolves the site base path itself, so it works even when the missing URL is nested, and offers a link to *both* calculators plus an automatic redirect back to the RULA tool. |
 | `README.md` | This file. |
 
 ### Sub-path safety
@@ -37,9 +50,10 @@ so the site URL itself was broken.
 A project site is published under `/<repository>/`, not at the domain root, so relative and
 absolute URLs matter:
 
-- every asset in `index.html` is either inline or an absolute `https://` URL (Google Fonts) — nothing
+- every asset in the tools is either inline or an absolute `https://` URL (Google Fonts) — nothing
   breaks under the sub-path;
-- the redirect stub uses the relative `index.html`, which resolves correctly at any depth;
+- the `RULA` / `REBA` switcher and the redirect stub use **relative** hrefs (`index.html`,
+  `reba-calculadora.html`), which resolve correctly at any depth, including on a custom domain;
 - `404.html` computes the base path at runtime (`REPO` constant at the top of its script) because a
   404 is rendered at the *requested* URL, where relative links would point to the wrong folder.
 
@@ -59,6 +73,9 @@ git switch main
 git merge <your-branch>
 git push origin main
 ```
+
+Because Pages publishes from `main`, changes on a feature branch are **not** live until they are
+merged into `main`.
 
 ### Optional: switch to GitHub Actions
 
@@ -83,19 +100,31 @@ python3 -m http.server 8080
 npx serve .
 ```
 
-Then browse to <http://localhost:8080/>. Opening `index.html` directly with `file://` also works;
-the tool keeps all state in memory and does not call any API.
+Then browse to <http://localhost:8080/> (RULA) or
+<http://localhost:8080/reba-calculadora.html> (REBA). Opening a file directly with `file://` also
+works; the tools keep all state in memory and do not call any API.
 
 To reproduce the exact Pages layout (site under a sub-folder), copy the files into a directory
 named `ErgoTools/` and serve its parent: <http://localhost:8080/ErgoTools/>.
+
+## Scoring tables
+
+The REBA tables in `reba-calculadora.html` (`TABLE_A`, `TABLE_B`, `TABLE_C` and the action levels)
+follow Hignett & McAtamney (2000) as published by
+[Ergonautas / Universitat Politècnica de València](https://www.ergonautas.upv.es/ergoniza/app_en/land/index.html?method=reba):
+Table A is indexed `[trunk-1][(neck-1)*4 + (legs-1)]` because the legs score runs 1–4 (base support
+score plus the knee-flexion adjustment), Table B `[arm-1][(forearm-1)*3 + (wrist-1)]`, and Table C
+`[A-1][B-1]`. Group A is exhaustive over all 60 posture combinations (192 including the trunk/neck
+adjustments) and Group B over all 36 (64 including the arm/wrist adjustments).
 
 ## Repository layout
 
 ```
 .
 ├── index.html              # the RULA calculator (whole app: markup + CSS + JS)
+├── reba-calculadora.html   # the REBA calculator (whole app: markup + CSS + JS)
 ├── rula-calculadora.html   # redirect stub for legacy links
-├── 404.html                # custom 404 page
+├── 404.html                # custom 404 page (links both tools)
 ├── .nojekyll               # publish as-is, skip Jekyll
 └── README.md
 ```
