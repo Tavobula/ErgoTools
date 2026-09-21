@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Calculadora REBA · Taller de Ergonomía e Ingeniería de Métodos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#eef2f6; --surface:#ffffff; --surface-2:#f5f8fb; --ink:#12233a; --ink-2:#51627a; --line:#d6dfea;
+  --accent:#0b6b86; --accent-2:#e4f2f7; --on-accent:#ffffff;
+  --nav:#0f2540; --nav-ink:#eaf2fa; --gold:#f2b134;
+  --lv0:#2f7fb5; --lv0-s:#e1eff8; --lv0-ink:#1b5a86;
+  --lv1:#2b9a5b; --lv1-s:#e2f4ea; --lv1-ink:#17663a;
+  --lv2:#d6a400; --lv2-s:#fbf1cf; --lv2-ink:#6f5200;
+  --lv3:#e47a1c; --lv3-s:#fde9d3; --lv3-ink:#914305;
+  --lv4:#cf3636; --lv4-s:#fbe0e0; --lv4-ink:#9b1f1f;
+  --gauge-fill:rgba(11,107,134,.2);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0c1522; --surface:#132133; --surface-2:#182a40; --ink:#e6eef8; --ink-2:#9fb1c7; --line:#27405c;
+    --accent:#5ec2df; --accent-2:#12384a; --on-accent:#06202b;
+    --nav:#08111c; --nav-ink:#eaf2fa;
+    --lv0:#6bb4e6; --lv0-s:#12303f; --lv0-ink:#a6d4f4;
+    --lv1:#4cc584; --lv1-s:#153a29; --lv1-ink:#8fe3b3;
+    --lv2:#e8be3a; --lv2-s:#3a3212; --lv2-ink:#f2d878;
+    --lv3:#f39a4b; --lv3-s:#402a14; --lv3-ink:#f8bd88;
+    --lv4:#f26b6b; --lv4-s:#421b1b; --lv4-ink:#ffa5a5;
+    --gauge-fill:rgba(94,194,223,.24);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0c1522; --surface:#132133; --surface-2:#182a40; --ink:#e6eef8; --ink-2:#9fb1c7; --line:#27405c;
+  --accent:#5ec2df; --accent-2:#12384a; --on-accent:#06202b;
+  --nav:#08111c; --nav-ink:#eaf2fa;
+  --lv0:#6bb4e6; --lv0-s:#12303f; --lv0-ink:#a6d4f4;
+  --lv1:#4cc584; --lv1-s:#153a29; --lv1-ink:#8fe3b3;
+  --lv2:#e8be3a; --lv2-s:#3a3212; --lv2-ink:#f2d878;
+  --lv3:#f39a4b; --lv3-s:#402a14; --lv3-ink:#f8bd88;
+  --lv4:#f26b6b; --lv4-s:#421b1b; --lv4-ink:#ffa5a5;
+  --gauge-fill:rgba(94,194,223,.24);
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;-webkit-text-size-adjust:100%}
+[data-level="0"]{--lvl:var(--lv0);--lvl-s:var(--lv0-s);--lvl-ink:var(--lv0-ink)}
+[data-level="1"]{--lvl:var(--lv1);--lvl-s:var(--lv1-s);--lvl-ink:var(--lv1-ink)}
+[data-level="2"]{--lvl:var(--lv2);--lvl-s:var(--lv2-s);--lvl-ink:var(--lv2-ink)}
+[data-level="3"]{--lvl:var(--lv3);--lvl-s:var(--lv3-s);--lvl-ink:var(--lv3-ink)}
+[data-level="4"]{--lvl:var(--lv4);--lvl-s:var(--lv4-s);--lvl-ink:var(--lv4-ink)}
+[data-sides="L"] .col-R,[data-sides="R"] .col-L{display:none}
+h1,h2,h3,h4,p{margin:0}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+button{font:inherit;color:inherit}
+
+/* Barra de la asignatura */
+.course-bar{background:var(--nav);color:var(--nav-ink)}
+.course-bar .in{max-width:1180px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.course-bar svg{flex:none}
+.course-bar .name{display:flex;flex-direction:column;line-height:1.25;min-width:0}
+.course-bar .name strong{font-size:1.05rem;font-weight:700}
+.course-bar .name span{font-size:.82rem;opacity:.78}
+.course-bar .tag{margin-left:auto;border:1px solid var(--gold);color:var(--gold);border-radius:999px;padding:3px 12px;font-size:.85rem;font-weight:600}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+.crumbs{padding:18px 0 4px;color:var(--ink-2);font-size:.9rem}
+.crumbs b{color:var(--ink);font-weight:600}
+h1{font-size:clamp(1.7rem,3.2vw,2.5rem);line-height:1.15;font-weight:700;letter-spacing:-.015em;margin:6px 0 10px}
+.lead{color:var(--ink-2);max-width:66ch}
+.course-note{margin:18px 0;background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:10px;padding:14px 18px;display:grid;gap:2px}
+.course-note strong{font-size:1.02rem}
+.course-note span{color:var(--ink-2);font-size:.95rem;max-width:80ch}
+
+/* Cómo se calcula */
+details.how{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:18px}
+details.how summary{cursor:pointer;padding:14px 18px;font-weight:600;list-style:none;display:flex;align-items:center;gap:10px}
+details.how summary::-webkit-details-marker{display:none}
+details.how summary::before{content:"";width:8px;height:8px;border-right:2px solid var(--ink-2);border-bottom:2px solid var(--ink-2);transform:rotate(-45deg);transition:transform .15s}
+details.how[open] summary::before{transform:rotate(45deg)}
+.flow{padding:0 18px 18px;display:grid;gap:10px}
+.flow .row{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.flow .chip{background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:.88rem}
+.flow .chip.strong{background:var(--accent-2);border-color:var(--accent);font-weight:600}
+.flow .chev{width:14px;height:14px;flex:none;stroke:var(--ink-2);fill:none;stroke-width:2}
+.flow .lbl{font-weight:600;min-width:74px}
+
+/* Pasos */
+.stepper{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);padding:8px 0;margin:0 0 18px;display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.stepper button{display:flex;align-items:center;gap:10px;border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 12px;cursor:pointer;text-align:left;min-width:0}
+.stepper button .n{flex:none;width:26px;height:26px;border-radius:50%;background:var(--surface-2);border:1.5px solid var(--line);display:grid;place-items:center;font-weight:700;font-size:.85rem}
+.stepper button span.t{font-weight:600;font-size:.93rem;line-height:1.2;overflow-wrap:anywhere}
+.stepper button.on{border-color:var(--accent);background:var(--accent-2)}
+.stepper button.on .n{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:24px;align-items:start;padding-bottom:40px}
+.pane{display:none}
+.pane.active{display:block}
+.pane>*+*{margin-top:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px}
+.card h2{font-size:1.4rem;line-height:1.25;margin-bottom:6px}
+.card>.lead{margin-bottom:0}
+
+/* Formulario de datos */
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 16px;margin-top:16px}
+.fields .full{grid-column:1/-1}
+.field label,.field .lab{display:block;font-weight:600;font-size:.92rem;margin-bottom:5px}
+.field input[type=text],.field input[type=date],.field textarea{width:100%;border:1.5px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--ink);padding:9px 11px;font:inherit}
+.field textarea{min-height:88px;resize:vertical}
+.field input:focus-visible,.field textarea:focus-visible{border-color:var(--accent)}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg label{position:relative;margin:0;font-weight:500}
+.seg input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.seg span{display:block;border:1.5px solid var(--line);border-radius:999px;padding:7px 16px;background:var(--surface-2);cursor:pointer}
+.seg input:checked+span{border-color:var(--accent);background:var(--accent-2);font-weight:600}
+.seg input:focus-visible+span{outline:3px solid var(--accent);outline-offset:2px}
+
+/* Tarjetas de paso */
+.step-h{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:6px}
+.step-n{display:block;color:var(--accent);font-weight:600;font-size:.85rem}
+.step h3{font-size:1.15rem;line-height:1.3}
+.score-pill{flex:none;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:3px 12px;font-size:.88rem;white-space:nowrap}
+.score-pill b{font-size:1.05rem;font-variant-numeric:tabular-nums}
+.hint{color:var(--ink-2);font-size:.93rem;margin-bottom:12px;max-width:70ch}
+.sub{font-size:.95rem;margin:16px 0 8px}
+.opts{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.opts.list{grid-template-columns:1fr}
+.opts.two{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.opt{position:relative;display:block;cursor:pointer}
+.opt input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer;z-index:1}
+.opt-body{display:flex;flex-direction:column;gap:6px;height:100%;padding:10px;border:1.5px solid var(--line);border-radius:10px;background:var(--surface-2);transition:border-color .15s,background .15s}
+.opt input:checked+.opt-body{border-color:var(--accent);background:var(--accent-2);box-shadow:inset 0 0 0 1px var(--accent)}
+.opt input:focus-visible+.opt-body{outline:3px solid var(--accent);outline-offset:2px}
+.opt-head{display:flex;align-items:flex-start;gap:8px}
+.opt-t{font-weight:600;font-size:.93rem;line-height:1.3}
+.opt-s{color:var(--ink-2);font-size:.83rem;line-height:1.35}
+.pt{flex:none;background:var(--ink);color:var(--surface);border-radius:6px;padding:0 7px;font-size:.8rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.55}
+.pt.neg{background:var(--lv1);color:#fff}
+.gauge{display:block;width:100%;height:auto;max-height:112px}
+.g-sec{fill:var(--gauge-fill);stroke:var(--accent);stroke-width:1.2}
+.g-ref{stroke:var(--ink-2);stroke-width:2;fill:none}
+.g-ref.dash{stroke-dasharray:4 4;stroke-width:1.6}
+.g-fix{stroke:var(--ink-2);stroke-width:3;stroke-linecap:round}
+.g-seg{stroke:var(--ink);stroke-width:3.5;stroke-linecap:round;fill:none}
+.g-dot{fill:var(--ink)}
+.g-joint{fill:var(--surface);stroke:var(--ink);stroke-width:2}
+.g-head{fill:var(--surface);stroke:var(--ink);stroke-width:3}
+.g-ground{stroke:var(--ink-2);stroke-width:2}
+.chks{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.chk{position:relative;display:block;cursor:pointer}
+.chk input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer;z-index:1}
+.chk-body{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--surface-2);font-size:.92rem;line-height:1.35;height:100%}
+.chk input:checked+.chk-body{border-color:var(--accent);background:var(--accent-2);box-shadow:inset 0 0 0 1px var(--accent)}
+.chk input:focus-visible+.chk-body{outline:3px solid var(--accent);outline-offset:2px}
+.calc{display:flex;justify-content:space-between;align-items:center;gap:16px;background:var(--surface-2);border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:10px;padding:14px 18px}
+.calc>div{display:grid;gap:1px;min-width:0}
+.calc small{color:var(--ink-2);font-size:.85rem}
+.calc .formula{font-variant-numeric:tabular-nums}
+.big{font-family:'IBM Plex Sans Condensed','IBM Plex Sans',system-ui,sans-serif;font-weight:700;font-size:2.4rem;line-height:1;font-variant-numeric:tabular-nums}
+
+.side-tabs{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.side-tabs button{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 16px;cursor:pointer;font-weight:600}
+.side-tabs button.on{border-color:var(--accent);background:var(--accent-2)}
+.side-tabs .copy{margin-left:auto;font-weight:500;font-size:.88rem;border-radius:8px;background:transparent}
+.side-h{font-size:1.15rem;margin:0 0 -4px;color:var(--ink-2);font-weight:600}
+.side-panel>*+*{margin-top:16px}
+
+.nav-btns{display:flex;justify-content:space-between;gap:10px;margin-top:20px}
+.btn{border:1.5px solid var(--accent);background:var(--accent);color:var(--on-accent);border-radius:9px;padding:9px 18px;font-weight:600;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--accent)}
+.btn:hover{filter:brightness(1.06)}
+.btn.danger{border-color:var(--lv4);color:var(--lv4-ink);background:var(--lv4-s)}
+
+/* Puntuación en vivo */
+.live{position:sticky;top:calc(env(safe-area-inset-top,0px) + 76px);max-height:calc(100dvh - 96px);overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px}
+.live h2{font-size:1.1rem;margin-bottom:2px}
+.live .sub-l{color:var(--ink-2);font-size:.85rem;margin-bottom:12px}
+.final{display:flex;align-items:center;gap:14px;background:var(--lvl-s);border-radius:12px;padding:12px 14px}
+.final .big{font-size:3.6rem;color:var(--lvl-ink)}
+.final .txt{display:grid;gap:2px;min-width:0}
+.final .txt strong{color:var(--lvl-ink);font-size:.98rem;line-height:1.25}
+.final .txt span{font-size:.85rem;color:var(--ink)}
+.scale{position:relative;display:grid;grid-template-columns:repeat(15,1fr);gap:2px;margin:22px 0 4px}
+.scale i{font-style:normal;text-align:center;font-size:.68rem;font-weight:600;padding:3px 0;border-bottom:4px solid;border-radius:4px 4px 0 0}
+.scale i.c0{background:var(--lv0-s);border-color:var(--lv0)}
+.scale i.c1{background:var(--lv1-s);border-color:var(--lv1)}
+.scale i.c2{background:var(--lv2-s);border-color:var(--lv2)}
+.scale i.c3{background:var(--lv3-s);border-color:var(--lv3)}
+.scale i.c4{background:var(--lv4-s);border-color:var(--lv4)}
+.scale .mk{position:absolute;top:-14px;width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:10px solid var(--ink);transform:translateX(-50%);transition:left .2s}
+table.mini{width:100%;border-collapse:collapse;margin-top:10px;font-size:.9rem}
+table.mini th,table.mini td{padding:5px 6px;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums}
+table.mini th:first-child,table.mini td:first-child{text-align:left}
+table.mini thead th{font-weight:600;color:var(--ink-2);font-size:.82rem}
+table.mini tr.grp td{background:var(--surface-2);font-weight:600;color:var(--ink-2);text-align:left;font-size:.82rem}
+table.mini tr.tot td{font-weight:700}
+table.mini td b{font-weight:700}
+.live .btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.live .btns .btn{padding:7px 12px;font-size:.88rem;flex:1 1 auto}
+
+/* Resumen */
+.results{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.res-card{background:var(--lvl-s);border:1px solid var(--lvl);border-radius:12px;padding:16px 18px;display:grid;gap:6px}
+.res-card .who{font-weight:600}
+.res-card .top{display:flex;align-items:center;gap:14px}
+.res-card .big{font-size:3.2rem;color:var(--lvl-ink)}
+.res-card strong{color:var(--lvl-ink)}
+.res-card p{font-size:.92rem}
+.res-card small{color:var(--ink-2)}
+.two-col{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.tbl-wrap{overflow-x:auto;max-width:100%;border:1px solid var(--line);border-radius:8px}
+table.tbl{border-collapse:collapse;width:100%;font-size:.82rem;font-variant-numeric:tabular-nums;text-align:center}
+table.tbl th,table.tbl td{border:1px solid var(--line);padding:4px 6px;min-width:34px}
+table.tbl th{background:var(--surface-2);font-weight:600}
+table.tbl td.hit{background:var(--accent);color:var(--on-accent);font-weight:700;outline:2px solid var(--ink);outline-offset:-2px}
+table.tbl th.hit-h{background:var(--accent-2);color:var(--ink);box-shadow:inset 0 -3px 0 var(--accent)}
+table.tbl td.c0{background:var(--lv0-s)} table.tbl td.c1{background:var(--lv1-s)} table.tbl td.c2{background:var(--lv2-s)} table.tbl td.c3{background:var(--lv3-s)} table.tbl td.c4{background:var(--lv4-s)}
+table.tbl td.hit.c0,table.tbl td.hit.c1,table.tbl td.hit.c2,table.tbl td.hit.c3,table.tbl td.hit.c4{background:var(--accent);color:var(--on-accent)}
+.tcap{font-size:.9rem;margin:14px 0 6px;font-weight:600}
+.tcap small{font-weight:400;color:var(--ink-2)}
+.levels{display:grid;gap:8px}
+.levels .lv{display:grid;grid-template-columns:104px 1fr;gap:12px;align-items:center;padding:9px 12px;border-radius:8px;border:1.5px solid transparent;background:var(--lvl-s)}
+.levels .lv b{color:var(--lvl-ink)}
+.levels .lv.now{border-color:var(--lvl-ink)}
+.levels .lv span{font-size:.92rem}
+textarea.report{width:100%;min-height:340px;border:1.5px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--ink);padding:12px;font:.86rem/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;resize:vertical}
+.rep-btns{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.msg{font-size:.9rem;color:var(--ink-2)}
+.refs{font-size:.88rem;color:var(--ink-2)}
+.refs p+p{margin-top:8px}
+.refs a{color:var(--accent)}
+footer.site{max-width:1180px;margin:0 auto;padding:0 20px 36px;color:var(--ink-2);font-size:.85rem}
+footer.site p{max-width:90ch}
+
+/* Barra móvil */
+.mbar{display:none}
+@media (max-width:960px){
+  .layout{grid-template-columns:1fr}
+  .live{position:static;max-height:none}
+  .mbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;align-items:center;gap:12px;background:var(--surface);border-top:3px solid var(--lvl);padding:8px 16px calc(8px + env(safe-area-inset-bottom,0px));box-shadow:0 -4px 16px rgba(0,0,0,.12)}
+  .mbar .big{font-size:1.9rem;color:var(--lvl-ink)}
+  .mbar .t{display:grid;line-height:1.2;font-size:.85rem;min-width:0;flex:1}
+  .mbar .t strong{color:var(--lvl-ink)}
+  body{padding-bottom:78px}
+}
+@media (max-width:640px){
+  .stepper{grid-template-columns:repeat(5,1fr);gap:5px}
+  .stepper button{flex-direction:column;gap:4px;padding:8px 4px;text-align:center}
+  .stepper button span.t{font-size:.66rem}
+  .fields{grid-template-columns:1fr}
+  .opts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .opts.list,.opts.two{grid-template-columns:1fr}
+  .card{padding:16px}
+  .course-bar .tag{margin-left:0}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+@media print{
+  body{background:#fff;color:#000;padding-bottom:0}
+  .course-bar .tag,.crumbs,.course-note,details.how,.stepper,.live,.mbar,.nav-btns,.rep-btns,.pane:not([data-pane="5"]){display:none!important}
+  .pane[data-pane="5"]{display:block!important}
+  .layout{display:block}
+  .card,.res-card{break-inside:avoid;border-color:#999}
+  textarea.report{min-height:420px;border:1px solid #999;background:#fff;color:#000}
+}
+</style>
+</head>
+<body data-level="0" data-sides="both">
+
+<header class="course-bar">
+  <div class="in">
+    <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true">
+      <rect width="38" height="38" rx="9" fill="#f2b134"/>
+      <circle cx="19" cy="9" r="3.6" fill="#0f2540"/>
+      <path d="M19 13.5v9.5M19 23l-5.5 9M19 23l5.5 9" stroke="#0f2540" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <path d="M19 16l8 5" stroke="#0f2540" stroke-width="3" stroke-linecap="round"/>
+      <path d="M19 26a8 8 0 0 1 6.6-2.4" stroke="#0f2540" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    </svg>
+    <div class="name">
+      <strong>Taller de Ergonomía e Ingeniería de Métodos</strong>
+      <span>Herramienta de apoyo para la práctica de evaluación postural</span>
+    </div>
+    <span class="tag">Método REBA</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="crumbs">Herramientas de ergonomía física / <b>REBA</b></p>
+  <h1>Herramienta de puntuación REBA</h1>
+  <p class="lead">Evaluación rápida del cuerpo completo (Rapid Entire Body Assessment). Completa los grupos A y B y la actividad muscular, y revisa la puntuación final y el nivel de actuación. El cálculo se actualiza mientras respondes.</p>
+
+  <div class="course-note">
+    <strong>Asignatura: Taller de Ergonomía e Ingeniería de Métodos</strong>
+    <span>Calculadora para la práctica de análisis postural. Registra tu nombre y el de tu equipo en el paso 1 para que aparezcan en el reporte que entregues.</span>
+  </div>
+
+  <details class="how">
+    <summary>¿Cómo se calcula la puntuación?</summary>
+    <div class="flow">
+      <div class="row"><span class="lbl">Grupo A</span>
+        <span class="chip">Cuello · tronco · piernas</span><svg class="chev" viewBox="0 0 14 14"><path d="M4 2l5 5-5 5"/></svg>
+        <span class="chip">Tabla A</span><svg class="chev" viewBox="0 0 14 14"><path d="M4 2l5 5-5 5"/></svg>
+        <span class="chip">+ carga o fuerza</span><svg class="chev" viewBox="0 0 14 14"><path d="M4 2l5 5-5 5"/></svg>
+        <span class="chip strong">Puntuación A</span></div>
+      <div class="row"><span class="lbl">Grupo B</span>
+        <span class="chip">Brazo · antebrazo · muñeca</span><svg class="chev" viewBox="0 0 14 14"><path d="M4 2l5 5-5 5"/></svg>
+        <span class="chip">Tabla B</span><svg class="chev" viewBox="0 0 14 14"><path d="M4 2l5 5-5 5"/></svg>
+        <span class="chip">+ calidad del agarre</span><svg class="chev" viewBox="0 0 14 14"><path d="M4 2l5 5-5 5"/></svg>
+        <span class="chip strong">Puntuación B</span></div>
+      <div class="row"><span class="lbl">Resultado</span>
+        <span class="chip strong">A y B</span><svg class="chev" viewBox="0 0 14 14"><path d="M4 2l5 5-5 5"/></svg>
+        <span class="chip">Tabla C</span><svg class="chev" viewBox="0 0 14 14"><path d="M4 2l5 5-5 5"/></svg>
+        <span class="chip">+ actividad muscular</span><svg class="chev" viewBox="0 0 14 14"><path d="M4 2l5 5-5 5"/></svg>
+        <span class="chip strong">Puntuación final (1 a 15)</span><svg class="chev" viewBox="0 0 14 14"><path d="M4 2l5 5-5 5"/></svg>
+        <span class="chip">Nivel de actuación (0 a 4)</span></div>
+    </div>
+  </details>
+
+  <div id="tool">
+    <nav class="stepper" id="stepper" role="tablist" aria-label="Pasos de la evaluación">
+      <button role="tab" data-pane="1" aria-selected="true"><span class="n">1</span><span class="t">Datos de la tarea</span></button>
+      <button role="tab" data-pane="2" aria-selected="false"><span class="n">2</span><span class="t">Grupo A: cuello, tronco y piernas</span></button>
+      <button role="tab" data-pane="3" aria-selected="false"><span class="n">3</span><span class="t">Grupo B: brazo y muñeca</span></button>
+      <button role="tab" data-pane="4" aria-selected="false"><span class="n">4</span><span class="t">Actividad</span></button>
+      <button role="tab" data-pane="5" aria-selected="false"><span class="n">5</span><span class="t">Resumen y reporte</span></button>
+    </nav>
+
+    <div class="layout">
+      <div class="panes">
+
+        <!-- 1. Datos -->
+        <section class="pane active" data-pane="1" role="tabpanel">
+          <div class="card">
+            <h2>Datos de la tarea</h2>
+            <p class="lead">Registra la tarea evaluada, la postura observada y las notas que sean relevantes.</p>
+            <div class="fields">
+              <div class="field"><label for="m-evaluator">Evaluador o evaluadora</label><input id="m-evaluator" type="text" data-meta="evaluator" autocomplete="name"></div>
+              <div class="field"><label for="m-team">Grupo o equipo</label><input id="m-team" type="text" data-meta="team"></div>
+              <div class="field"><label for="m-date">Fecha</label><input id="m-date" type="date" data-meta="date"></div>
+              <div class="field"><label for="m-company">Empresa</label><input id="m-company" type="text" data-meta="company"></div>
+              <div class="field"><label for="m-dept">Departamento o área</label><input id="m-dept" type="text" data-meta="dept"></div>
+              <div class="field"><label for="m-supervisor">Supervisor o supervisora</label><input id="m-supervisor" type="text" data-meta="supervisor"></div>
+              <div class="field full"><label for="m-task">Nombre de la tarea</label><input id="m-task" type="text" data-meta="task"></div>
+              <div class="field full"><label for="m-desc">Descripción de la tarea</label><textarea id="m-desc" data-meta="desc" placeholder="Qué hace el trabajador, qué carga maneja, con qué herramientas, cada cuánto se repite la acción…"></textarea></div>
+              <div class="field full">
+                <span class="lab" id="lab-side">Lado a evaluar</span>
+                <div class="seg" role="radiogroup" aria-labelledby="lab-side">
+                  <label><input type="radio" name="metaSide" value="both" data-meta="side"><span>Ambos lados</span></label>
+                  <label><input type="radio" name="metaSide" value="R" data-meta="side"><span>Lado derecho</span></label>
+                  <label><input type="radio" name="metaSide" value="L" data-meta="side"><span>Lado izquierdo</span></label>
+                </div>
+                <p class="hint" style="margin:8px 0 0">REBA puntúa el brazo, el antebrazo y la muñeca de un solo lado a la vez. Si dudas cuál está más exigido, evalúa ambos. El cuello, el tronco, las piernas, la carga y la actividad se puntúan una sola vez.</p>
+              </div>
+              <div class="field full"><label for="m-media">Referencia de foto o video</label><input id="m-media" type="text" data-meta="media" placeholder="Nombre de archivo, enlace o número de fotograma"></div>
+            </div>
+          </div>
+          <div class="nav-btns"><span></span><button class="btn" data-go="2">Continuar al Grupo A</button></div>
+        </section>
+
+        <!-- 2. Grupo A -->
+        <section class="pane" data-pane="2" role="tabpanel">
+          <div class="card">
+            <h2>Grupo A: análisis de cuello, tronco y piernas</h2>
+            <p class="lead">Puntúa cuello, tronco y piernas. La herramienta consulta la Tabla A y suma la carga o fuerza para obtener la puntuación A.</p>
+          </div>
+          <div id="panelA"></div>
+          <div class="nav-btns"><button class="btn ghost" data-go="1">Anterior</button><button class="btn" data-go="3">Continuar al Grupo B</button></div>
+        </section>
+
+        <!-- 3. Grupo B -->
+        <section class="pane" data-pane="3" role="tabpanel">
+          <div class="card">
+            <h2>Grupo B: análisis de brazo y muñeca</h2>
+            <p class="lead">Puntúa brazo, antebrazo y muñeca. La herramienta consulta la Tabla B y suma la calidad del agarre para obtener la puntuación B.</p>
+          </div>
+          <div class="side-tabs" id="sideTabs" role="tablist" aria-label="Lado evaluado">
+            <button role="tab" data-tab="L">Lado izquierdo (<span data-out="L.final">1</span>)</button>
+            <button role="tab" data-tab="R">Lado derecho (<span data-out="R.final">1</span>)</button>
+            <button class="copy" id="copySide" type="button"></button>
+          </div>
+          <div id="panelsB"></div>
+          <div class="nav-btns"><button class="btn ghost" data-go="2">Anterior</button><button class="btn" data-go="4">Continuar a la actividad</button></div>
+        </section>
+
+        <!-- 4. Actividad -->
+        <section class="pane" data-pane="4" role="tabpanel">
+          <div class="card">
+            <h2>Actividad muscular y puntuación final</h2>
+            <p class="lead">Combina las puntuaciones A y B en la Tabla C y suma un punto por cada condición de actividad que se presente. Las tres condiciones no son excluyentes.</p>
+          </div>
+          <div id="panelAct"></div>
+          <div class="nav-btns"><button class="btn ghost" data-go="3">Anterior</button><button class="btn" data-go="5">Ver resumen</button></div>
+        </section>
+
+        <!-- 5. Resumen -->
+        <section class="pane" data-pane="5" role="tabpanel">
+          <div class="card">
+            <h2>Resumen y reporte</h2>
+            <p class="lead">Revisa las puntuaciones intermedias, la puntuación final y el nivel de actuación antes de imprimir o guardar el reporte.</p>
+          </div>
+
+          <div class="results" id="results">
+            <div class="res-card col-L" data-level="0" data-side="L">
+              <span class="who">Lado izquierdo</span>
+              <div class="top"><b class="big" data-out="L.final">1</b><div><strong data-out="L.lvlT"></strong><p data-out="L.lvlD"></p></div></div>
+            </div>
+            <div class="res-card col-R" data-level="0" data-side="R">
+              <span class="who">Lado derecho</span>
+              <div class="top"><b class="big" data-out="R.final">1</b><div><strong data-out="R.lvlT"></strong><p data-out="R.lvlD"></p></div></div>
+            </div>
+          </div>
+
+          <div class="two-col">
+            <div class="card">
+              <h3>Grupo A</h3>
+              <table class="mini">
+                <tbody>
+                  <tr><td>Puntuación postural A (Tabla A)</td><td><b data-out="A.post"></b></td></tr>
+                  <tr><td>Carga o fuerza</td><td data-out="A.load"></td></tr>
+                  <tr class="tot"><td>Puntuación A</td><td data-out="A.A"></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="card">
+              <h3>Grupo B</h3>
+              <table class="mini">
+                <thead><tr><th></th><th class="col-L">Izq.</th><th class="col-R">Der.</th></tr></thead>
+                <tbody>
+                  <tr><td>Puntuación postural B (Tabla B)</td><td class="col-L"><b data-out="L.post"></b></td><td class="col-R"><b data-out="R.post"></b></td></tr>
+                  <tr><td>Calidad del agarre</td><td class="col-L" data-out="L.coup"></td><td class="col-R" data-out="R.coup"></td></tr>
+                  <tr class="tot"><td>Puntuación B</td><td class="col-L" data-out="L.B"></td><td class="col-R" data-out="R.B"></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="card">
+              <h3>Resultado</h3>
+              <table class="mini">
+                <thead><tr><th></th><th class="col-L">Izq.</th><th class="col-R">Der.</th></tr></thead>
+                <tbody>
+                  <tr><td>Puntuación C (Tabla C)</td><td class="col-L" data-out="L.C"></td><td class="col-R" data-out="R.C"></td></tr>
+                  <tr><td>Actividad muscular</td><td class="col-L" data-out="act.pts"></td><td class="col-R" data-out="act.pts"></td></tr>
+                  <tr class="tot"><td>Puntuación final REBA</td><td class="col-L" data-out="L.final"></td><td class="col-R" data-out="R.final"></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Niveles de actuación</h3>
+            <p class="hint" style="margin-top:4px">El nivel resaltado corresponde a la puntuación final más alta entre los lados evaluados.</p>
+            <div class="levels" id="levels"></div>
+          </div>
+
+          <div class="card">
+            <h3>Consulta en las tablas del método</h3>
+            <p class="hint" style="margin-top:4px">Las celdas resaltadas muestran dónde cayó tu evaluación en cada tabla. En la Tabla C, el color indica el nivel de actuación del valor de la celda, antes de sumar la actividad.</p>
+            <div class="seg" id="tblSide" hidden style="margin-top:8px">
+              <label><input type="radio" name="tblSide" value="L"><span>Tablas del lado izquierdo</span></label>
+              <label><input type="radio" name="tblSide" value="R"><span>Tablas del lado derecho</span></label>
+            </div>
+            <p class="tcap">Tabla A <small data-out="t.A"></small></p>
+            <div class="tbl-wrap" id="wrapA"></div>
+            <p class="tcap">Tabla B <small data-out="t.B"></small></p>
+            <div class="tbl-wrap" id="wrapB"></div>
+            <p class="tcap">Tabla C <small data-out="t.C"></small></p>
+            <div class="tbl-wrap" id="wrapC"></div>
+          </div>
+
+          <div class="card">
+            <h3>Texto del reporte</h3>
+            <p class="hint" style="margin:4px 0 10px">Se genera con tus datos y puntuaciones. Puedes copiarlo o imprimir esta sección.</p>
+            <textarea class="report" id="reportText" readonly aria-label="Texto del reporte"></textarea>
+            <div class="rep-btns">
+              <button class="btn" id="copyBtn" type="button">Copiar texto del reporte</button>
+              <button class="btn ghost" id="printBtn" type="button">Imprimir o guardar PDF</button>
+              <span class="msg" id="copyMsg" role="status" aria-live="polite"></span>
+            </div>
+          </div>
+
+          <div class="card refs">
+            <p><b>Referencia.</b> Hignett, S. y McAtamney, L. (2000). Rapid Entire Body Assessment (REBA). <i>Applied Ergonomics</i>, 31(2), 201-205. Hoja de trabajo original desarrollada por el Dr. Alan Hedge.</p>
+            <p>Tablas y criterios de puntuación contrastados con la guía de Ergonautas (Diego-Mas, J. A., Universidad Politécnica de Valencia).</p>
+            <p>Esta herramienta es un material didáctico y no reemplaza la hoja de trabajo oficial. Verifica las puntuaciones contra el método original cuando hagas una evaluación formal.</p>
+          </div>
+          <div class="nav-btns"><button class="btn ghost" data-go="4">Anterior</button><span></span></div>
+        </section>
+      </div>
+
+      <!-- Puntuación en vivo -->
+      <aside class="live" id="live" data-level="0" aria-label="Puntuación en vivo">
+        <h2>Puntuación en vivo</h2>
+        <p class="sub-l">Se calcula con las selecciones actuales.</p>
+        <div class="final" aria-live="polite">
+          <b class="big" data-out="live.score">1</b>
+          <div class="txt"><strong data-out="live.title"></strong><span data-out="live.desc"></span></div>
+        </div>
+        <div class="scale" id="scale"></div>
+        <p class="sub-l" style="margin:6px 0 0" data-out="live.side"></p>
+        <table class="mini">
+          <thead><tr><th>Grupo A (ambos lados)</th><th colspan="2"></th></tr></thead>
+          <tbody>
+            <tr><td>Cuello</td><td colspan="2" data-out="A.neck"></td></tr>
+            <tr><td>Tronco</td><td colspan="2" data-out="A.trunk"></td></tr>
+            <tr><td>Piernas</td><td colspan="2" data-out="A.legs"></td></tr>
+            <tr><td>Puntuación postural A</td><td colspan="2" data-out="A.post"></td></tr>
+            <tr class="tot"><td>Puntuación A (con carga)</td><td colspan="2" data-out="A.A"></td></tr>
+            <tr class="grp"><td>Grupo B</td><td class="col-L">Izq.</td><td class="col-R">Der.</td></tr>
+            <tr><td>Brazo</td><td class="col-L" data-out="L.upper"></td><td class="col-R" data-out="R.upper"></td></tr>
+            <tr><td>Antebrazo</td><td class="col-L" data-out="L.lower"></td><td class="col-R" data-out="R.lower"></td></tr>
+            <tr><td>Muñeca</td><td class="col-L" data-out="L.wrist"></td><td class="col-R" data-out="R.wrist"></td></tr>
+            <tr><td>Puntuación postural B</td><td class="col-L" data-out="L.post"></td><td class="col-R" data-out="R.post"></td></tr>
+            <tr class="tot"><td>Puntuación B (con agarre)</td><td class="col-L" data-out="L.B"></td><td class="col-R" data-out="R.B"></td></tr>
+            <tr class="grp"><td>Resultado</td><td class="col-L">Izq.</td><td class="col-R">Der.</td></tr>
+            <tr><td>Puntuación C (Tabla C)</td><td class="col-L" data-out="L.C"></td><td class="col-R" data-out="R.C"></td></tr>
+            <tr><td>Actividad muscular</td><td class="col-L" data-out="act.pts"></td><td class="col-R" data-out="act.pts"></td></tr>
+            <tr class="tot"><td>Puntuación final REBA</td><td class="col-L" data-out="L.final"></td><td class="col-R" data-out="R.final"></td></tr>
+          </tbody>
+        </table>
+        <div class="btns">
+          <button class="btn ghost" id="recalc" type="button">Recalcular</button>
+          <button class="btn ghost" id="toSummary" type="button">Ver resumen</button>
+          <button class="btn ghost" id="reset" type="button">Reiniciar</button>
+        </div>
+      </aside>
+    </div>
+  </div>
+</main>
+
+<footer class="site">
+  <p>Material didáctico de la asignatura Taller de Ergonomía e Ingeniería de Métodos. Basado en la estructura de la hoja de trabajo REBA; no es una herramienta oficial del método.</p>
+</footer>
+
+<div class="mbar" id="mbar" data-level="0">
+  <b class="big" data-out="live.score">1</b>
+  <div class="t"><strong data-out="live.title"></strong><span data-out="live.side"></span></div>
+  <button class="btn ghost" id="mbarBtn" type="button">Detalle</button>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* ---------- Tablas del método REBA ---------- */
+// Tabla A [tronco-1][(cuello-1)*4 + (piernas-1)]
+const TABLE_A=[
+ [1,2,3,4, 1,2,3,4, 3,3,5,6],
+ [2,3,4,5, 3,4,5,6, 4,5,6,7],
+ [2,4,5,6, 4,5,6,7, 5,6,7,8],
+ [3,5,6,7, 5,6,7,8, 6,7,8,9],
+ [4,6,7,8, 6,7,8,9, 7,8,9,9]
+];
+// Tabla B [brazo-1][(antebrazo-1)*3 + (muñeca-1)]
+const TABLE_B=[
+ [1,2,2, 1,2,3],
+ [1,2,3, 2,3,4],
+ [3,4,5, 4,5,5],
+ [4,5,5, 5,6,7],
+ [6,7,8, 7,8,8],
+ [7,8,8, 8,9,9]
+];
+// Tabla C [A-1][B-1]
+const TABLE_C=[
+ [1,1,1,2,3,3,4,5,6,7,7,7],
+ [1,2,2,3,4,4,5,6,6,7,7,8],
+ [2,3,3,3,4,5,6,7,7,8,8,8],
+ [3,4,4,4,5,6,7,8,8,9,9,9],
+ [4,4,4,5,6,7,8,8,9,9,9,9],
+ [6,6,6,7,8,8,9,9,10,10,10,10],
+ [7,7,7,8,9,9,9,10,10,11,11,11],
+ [8,8,8,9,10,10,10,10,10,11,11,11],
+ [9,9,9,10,10,10,11,11,11,12,12,12],
+ [10,10,10,11,11,11,11,12,12,12,12,12],
+ [11,11,11,11,12,12,12,12,12,12,12,12],
+ [12,12,12,12,12,12,12,12,12,12,12,12]
+];
+const LEVELS={
+ 0:{n:'Riesgo inapreciable',d:'No es necesaria actuación.',range:'1'},
+ 1:{n:'Riesgo bajo',d:'Puede ser necesaria la actuación.',range:'2 o 3'},
+ 2:{n:'Riesgo medio',d:'Es necesaria la actuación.',range:'4 a 7'},
+ 3:{n:'Riesgo alto',d:'Es necesaria la actuación cuanto antes.',range:'8 a 10'},
+ 4:{n:'Riesgo muy alto',d:'Es necesaria la actuación de inmediato.',range:'11 a 15'}
+};
+const levelOf=s=>s<=1?0:s<=3?1:s<=7?2:s<=10?3:4;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const SIDE_NAME={L:'izquierdo',R:'derecho'};
+const COUPLING_TXT={0:'Bueno',1:'Regular',2:'Malo',3:'Inaceptable'};
+
+/* ---------- Diagramas de ángulos ---------- */
+const rad=d=>d*Math.PI/180;
+const PT=(cx,cy,r,d)=>[+(cx+r*Math.cos(rad(d))).toFixed(1),+(cy+r*Math.sin(rad(d))).toFixed(1)];
+function gauge(o){
+  const {cx,cy,zero,sign=1,R=34,sectors=[],seg=0,segLen=40,refLen=50,dash=false,fixed=[],head=false}=o;
+  let s='<svg class="gauge" viewBox="0 0 120 100" aria-hidden="true" focusable="false">';
+  sectors.forEach(([a,b])=>{
+    const s1=zero+sign*a,s2=zero+sign*b,[x1,y1]=PT(cx,cy,R,s1),[x2,y2]=PT(cx,cy,R,s2);
+    s+=`<path class="g-sec" d="M${cx} ${cy}L${x1} ${y1}A${R} ${R} 0 ${Math.abs(b-a)>180?1:0} ${s2>s1?1:0} ${x2} ${y2}Z"/>`;
+  });
+  const [rx,ry]=PT(cx,cy,refLen,zero);
+  s+=`<line class="g-ref${dash?' dash':''}" x1="${cx}" y1="${cy}" x2="${rx}" y2="${ry}"/>`;
+  fixed.forEach(f=>{const [x,y]=PT(cx,cy,f.len,f.deg);s+=`<line class="g-fix" x1="${cx}" y1="${cy}" x2="${x}" y2="${y}"/>`;});
+  const sd=zero+sign*seg,[sx,sy]=PT(cx,cy,segLen,sd);
+  s+=`<line class="g-seg" x1="${cx}" y1="${cy}" x2="${sx}" y2="${sy}"/>`;
+  if(head){const [hx,hy]=PT(cx,cy,segLen+6,sd);s+=`<circle class="g-head" cx="${hx}" cy="${hy}" r="7"/>`;}
+  else s+=`<circle class="g-dot" cx="${sx}" cy="${sy}" r="3.6"/>`;
+  s+=`<circle class="g-joint" cx="${cx}" cy="${cy}" r="3.6"/></svg>`;
+  return s;
+}
+const G={
+ upper:(sectors,seg)=>gauge({cx:50,cy:44,zero:90,sign:-1,R:34,refLen:50,segLen:40,sectors,seg}),
+ lower:(sectors,seg)=>gauge({cx:44,cy:34,zero:90,sign:-1,R:34,refLen:56,dash:true,fixed:[{deg:-90,len:30}],segLen:42,sectors,seg}),
+ wrist:(sectors,seg)=>gauge({cx:66,cy:50,zero:0,sign:-1,R:34,refLen:48,dash:true,fixed:[{deg:180,len:54}],segLen:38,sectors,seg}),
+ neck:(sectors,seg)=>gauge({cx:50,cy:66,zero:-90,sign:1,R:38,refLen:56,dash:true,fixed:[{deg:90,len:28}],segLen:34,head:true,sectors,seg}),
+ trunk:(sectors,seg)=>gauge({cx:46,cy:62,zero:-90,sign:1,R:38,refLen:52,dash:true,fixed:[{deg:90,len:30}],segLen:38,head:true,sectors,seg}),
+ knee:(sectors,seg)=>gauge({cx:56,cy:34,zero:90,sign:1,R:34,refLen:56,dash:true,fixed:[{deg:-90,len:32}],segLen:44,sectors,seg})
+};
+const LEGS_OK='<svg class="gauge" viewBox="0 0 120 100" aria-hidden="true"><line class="g-ground" x1="14" y1="92" x2="106" y2="92"/><circle class="g-head" cx="60" cy="14" r="8"/><path class="g-seg" d="M60 22V56M60 56L46 92M60 56L74 92M60 32L46 48M60 32L74 48"/></svg>';
+const LEGS_BAD='<svg class="gauge" viewBox="0 0 120 100" aria-hidden="true"><line class="g-ground" x1="14" y1="92" x2="106" y2="92"/><circle class="g-head" cx="56" cy="14" r="8"/><path class="g-seg" d="M56 22V56M56 56L48 92M56 56L82 68L70 84M56 32L42 48M56 32L70 48"/></svg>';
+
+/* ---------- Opciones ---------- */
+const OPT={
+ neck:[
+  {v:1,pt:'+1',t:'Flexión de 0° a 20°',s:'Cabeza casi erguida o inclinación leve',g:G.neck([[0,20]],10)},
+  {v:2,pt:'+2',t:'Flexión mayor de 20° o extensión',s:'Inclinación marcada hacia adelante, o cabeza hacia atrás',g:G.neck([[20,60],[-40,0]],40)}
+ ],
+ trunk:[
+  {v:1,pt:'+1',t:'Tronco erguido',s:'Sin flexión ni extensión',g:G.trunk([],0)},
+  {v:2,pt:'+2',t:'Flexión o extensión de 0° a 20°',s:'Inclinación leve',g:G.trunk([[-20,20]],10)},
+  {v:3,pt:'+3',t:'Flexión de 20° a 60° o extensión mayor de 20°',s:'Inclinación moderada',g:G.trunk([[20,60],[-50,-20]],40)},
+  {v:4,pt:'+4',t:'Flexión mayor de 60°',s:'Inclinación marcada hacia adelante',g:G.trunk([[60,110]],85)}
+ ],
+ legs:[
+  {v:1,pt:'+1',t:'Soporte bilateral',s:'Sentado, andando, o de pie con el peso simétrico',g:LEGS_OK},
+  {v:2,pt:'+2',t:'Soporte unilateral o inestable',s:'De pie con un solo pie, soporte ligero o postura inestable',g:LEGS_BAD}
+ ],
+ knee:[
+  {v:0,pt:'0',t:'Sin flexión relevante',s:'Rodillas con menos de 30° de flexión, o sentado',g:G.knee([[0,30]],12)},
+  {v:1,pt:'+1',t:'Flexión de 30° a 60°',s:'Una o ambas rodillas',g:G.knee([[30,60]],45)},
+  {v:2,pt:'+2',t:'Flexión mayor de 60°',s:'Una o ambas rodillas, salvo postura sentada',g:G.knee([[60,130]],90)}
+ ],
+ load:[
+  {v:0,pt:'0',t:'Carga o fuerza menor de 5 kg',row:1},
+  {v:1,pt:'+1',t:'Carga o fuerza de 5 a 10 kg',row:1},
+  {v:2,pt:'+2',t:'Carga o fuerza mayor de 10 kg',row:1}
+ ],
+ upper:[
+  {v:1,pt:'+1',t:'Casi neutro',s:'De 20° de extensión a 20° de flexión',g:G.upper([[-20,20]],0)},
+  {v:2,pt:'+2',t:'Flexión leve',s:'Extensión mayor de 20° o flexión de 20° a 45°',g:G.upper([[-60,-20],[20,45]],32)},
+  {v:3,pt:'+3',t:'Flexión moderada',s:'Flexión de 45° a 90°',g:G.upper([[45,90]],67)},
+  {v:4,pt:'+4',t:'Flexión alta',s:'Flexión mayor de 90°',g:G.upper([[90,170]],120)}
+ ],
+ lower:[
+  {v:1,pt:'+1',t:'Flexión de 60° a 100°',s:'Ángulo del codo en rango medio',g:G.lower([[60,100]],80)},
+  {v:2,pt:'+2',t:'Fuera de 60° a 100°',s:'Flexión menor de 60° o mayor de 100°',g:G.lower([[0,60],[100,150]],30)}
+ ],
+ wrist:[
+  {v:1,pt:'+1',t:'Desviación de 0° a 15°',s:'Posición neutra o flexión/extensión leve',g:G.wrist([[-15,15]],8)},
+  {v:2,pt:'+2',t:'Desviación mayor de 15°',s:'Flexión o extensión marcada',g:G.wrist([[15,55],[-55,-15]],35)}
+ ],
+ coupling:[
+  {v:0,pt:'0',t:'Bueno',s:'Agarre bueno y fuerza de agarre de rango medio. Por ejemplo, contenedor con asas bien diseñadas.',row:1},
+  {v:1,pt:'+1',t:'Regular',s:'Agarre aceptable pero no ideal, o aceptable usando otra parte del cuerpo. Por ejemplo, asas de tamaño inadecuado o dedos flexionados 90°.',row:1},
+  {v:2,pt:'+2',t:'Malo',s:'Agarre posible pero no aceptable. Por ejemplo, objetos voluminosos, irregulares o con aristas.',row:1},
+  {v:3,pt:'+3',t:'Inaceptable',s:'Agarre torpe e inseguro, sin posibilidad de agarre manual, o inaceptable usando otras partes del cuerpo.',row:1}
+ ]
+};
+const BASE_TXT={
+ neck:{1:'flexión de 0° a 20°',2:'flexión mayor de 20° o extensión'},
+ trunk:{1:'erguido',2:'flexión o extensión de 0° a 20°',3:'flexión de 20° a 60° o extensión mayor de 20°',4:'flexión mayor de 60°'},
+ legs:{1:'soporte bilateral',2:'soporte unilateral o inestable'},
+ upper:{1:'casi neutro',2:'flexión leve',3:'flexión moderada',4:'flexión alta'},
+ lower:{1:'flexión de 60° a 100°',2:'fuera de 60° a 100°'},
+ wrist:{1:'desviación de 0° a 15°',2:'desviación mayor de 15°'}
+};
+const LOAD_TXT={0:'menor de 5 kg',1:'de 5 a 10 kg',2:'mayor de 10 kg'};
+const KNEE_TXT={0:'sin flexión relevante',1:'flexión de 30° a 60°',2:'flexión mayor de 60°'};
+
+/* ---------- Plantillas ---------- */
+function radios(side,field,opts,cls){
+  return `<div class="opts ${cls||''}" role="radiogroup">`+opts.map(o=>`<label class="opt"><input type="radio" name="${side}_${field}" value="${o.v}" data-side="${side}" data-field="${field}"><span class="opt-body">${o.g||''}<span class="opt-head"><b class="pt">${o.pt}</b><span class="opt-t">${o.t}</span></span>${o.s?`<span class="opt-s">${o.s}</span>`:''}</span></label>`).join('')+'</div>';
+}
+function checks(side,items){
+  return '<div class="chks">'+items.map(i=>`<label class="chk"><input type="checkbox" data-side="${side}" data-field="${i.f}"><span class="chk-body"><b class="pt${i.neg?' neg':''}">${i.pt}</b><span>${i.t}</span></span></label>`).join('')+'</div>';
+}
+function step(n,title,hint,body,outKey){
+  return `<article class="card step"><header class="step-h"><div><span class="step-n">Paso ${n}</span><h3>${title}</h3></div>${outKey?`<div class="score-pill">Puntuación <b data-out="${outKey}">1</b></div>`:''}</header>${hint?`<p class="hint">${hint}</p>`:''}${body}</article>`;
+}
+function calc(n,title,note,key,fKey,cls){
+  return `<div class="calc ${cls||''}"><div><span class="step-n">Paso ${n} (automático)</span><strong>${title}</strong><small>${note}</small>${fKey?`<small class="formula" data-out="${fKey}"></small>`:''}</div><b class="big" data-out="${key}">1</b></div>`;
+}
+function panelA(){
+  const s='A';
+  return step(1,'Posición del cuello','Ángulo entre el eje de la cabeza y el eje del tronco. Considera neutro el cuello con el tronco erguido y la vista al frente, a la altura de los ojos.',
+    radios(s,'neck',OPT.neck,'two')+'<h4 class="sub">Ajuste del cuello</h4>'+checks(s,[
+      {f:'nAdj',pt:'+1',t:'Cabeza rotada o con inclinación lateral'}
+    ]),'A.neck')+
+  step(2,'Posición del tronco','Ángulo entre el eje del tronco y la vertical.',
+    radios(s,'trunk',OPT.trunk,'')+'<h4 class="sub">Ajuste del tronco</h4>'+checks(s,[
+      {f:'tAdj',pt:'+1',t:'Tronco con inclinación lateral o rotación'}
+    ]),'A.trunk')+
+  step(3,'Posición de las piernas','Evalúa el soporte de las piernas y, si hay flexión de rodillas, súmala en el ajuste.',
+    radios(s,'legs',OPT.legs,'two')+'<h4 class="sub">Ajuste por flexión de rodillas</h4>'+radios(s,'knee',OPT.knee,''),'A.legs')+
+  calc(4,'Puntuación postural A','Se busca en la Tabla A con cuello, tronco y piernas.','A.post')+
+  step(5,'Carga o fuerza','Peso de la carga manejada o fuerza que se aplica. Añade un punto más si la fuerza se aplica de forma brusca.',
+    radios(s,'load',OPT.load,'list')+'<h4 class="sub">Ajuste por fuerza brusca</h4>'+checks(s,[
+      {f:'shock',pt:'+1',t:'Fuerzas o cargas aplicadas bruscamente, o con acumulación rápida de fuerza'}
+    ]),'A.loadpts')+
+  calc(6,'Puntuación A','Puntuación postural A + carga o fuerza.','A.A','A.Af');
+}
+function panelB(side){
+  const s=side;
+  return `<div class="side-panel" data-side="${s}"><h3 class="side-h">Lado ${SIDE_NAME[s]}</h3>`+
+  step(7,'Posición del brazo','Mide el ángulo entre el eje del brazo y el eje del tronco. Elige la posición y marca los ajustes que apliquen.',
+    radios(s,'upper',OPT.upper,'')+'<h4 class="sub">Ajustes del brazo</h4>'+checks(s,[
+      {f:'abd',pt:'+1',t:'Brazo abducido o rotado'},
+      {f:'raised',pt:'+1',t:'Hombro elevado'},
+      {f:'support',pt:'−1',neg:1,t:'Hay un punto de apoyo o la postura es a favor de la gravedad'}
+    ]),s+'.upper')+
+  step(8,'Posición del antebrazo','Ángulo de flexión del codo, entre el eje del antebrazo y el del brazo. Este segmento no tiene ajustes.',
+    radios(s,'lower',OPT.lower,'two'),s+'.lower')+
+  step(9,'Posición de la muñeca','Ángulo de flexión o extensión de la muñeca respecto a la posición neutra.',
+    radios(s,'wrist',OPT.wrist,'two')+'<h4 class="sub">Ajuste de la muñeca</h4>'+checks(s,[
+      {f:'wAdj',pt:'+1',t:'Torsión o desviación radial o cubital de la muñeca'}
+    ]),s+'.wrist')+
+  calc(10,'Puntuación postural B','Se busca en la Tabla B con brazo, antebrazo y muñeca.',s+'.post')+
+  step(11,'Calidad del agarre','Cómo se sujeta la carga o la herramienta con la mano. Si no hay agarres, elige Bueno.',
+    radios(s,'coupling',OPT.coupling,'list'),s+'.coupPts')+
+  calc(12,'Puntuación B','Puntuación postural B + calidad del agarre.',s+'.B',s+'.Bf')+
+  '</div>';
+}
+function panelAct(){
+  return ['L','R'].map(k=>calc(13,`Puntuación C, lado ${SIDE_NAME[k]}`,'Se busca en la Tabla C con las puntuaciones A y B.',k+'.C',k+'.CAB',`col-${k}`)).join('')+
+  step(14,'Actividad muscular','Marca todas las condiciones que se presenten. Cada una añade un punto a la puntuación C.',
+    checks('act',[
+      {f:'stat',pt:'+1',t:'Una o más partes del cuerpo permanecen estáticas, por ejemplo sostenidas más de 1 minuto'},
+      {f:'rep',pt:'+1',t:'Movimientos repetitivos, por ejemplo más de 4 veces por minuto (sin contar caminar)'},
+      {f:'rapid',pt:'+1',t:'Cambios de postura importantes o posturas inestables'}
+    ]),'act.pts')+
+  `<article class="card step"><header class="step-h"><div><h3>Notas de la evaluación</h3></div></header><p class="hint">Registra observaciones que ayuden a explicar las posturas o la actividad seleccionadas.</p><div class="field"><textarea id="m-notes" data-meta="notes" aria-label="Notas de la evaluación" style="width:100%;border:1.5px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--ink);padding:9px 11px;font:inherit;min-height:88px;resize:vertical"></textarea></div></article>`+
+  ['L','R'].map(k=>calc(15,`Puntuación final REBA, lado ${SIDE_NAME[k]}`,'Puntuación C + actividad muscular.',k+'.final',k+'.finalf',`col-${k}`)).join('');
+}
+
+/* ---------- Tablas de consulta ---------- */
+function buildTableA(){
+  let h='<table class="tbl" id="tA"><thead><tr><th rowspan="2">Tronco</th>';
+  for(let n=1;n<=3;n++)h+=`<th colspan="4" data-hw="${n}">Cuello ${n}</th>`;
+  h+='</tr><tr>';
+  for(let i=0;i<12;i++)h+=`<th data-hc="${i}">Piernas ${i%4+1}</th>`;
+  h+='</tr></thead><tbody>';
+  for(let t=1;t<=5;t++){
+    h+=`<tr><th data-hr="${t}">${t}</th>`;
+    TABLE_A[t-1].forEach((v,i)=>{h+=`<td data-k="${t}-${i}">${v}</td>`;});
+    h+='</tr>';
+  }
+  return h+'</tbody></table>';
+}
+function buildTableB(){
+  let h='<table class="tbl" id="tB"><thead><tr><th rowspan="2">Brazo</th>';
+  for(let f=1;f<=2;f++)h+=`<th colspan="3" data-hw="${f}">Antebrazo ${f}</th>`;
+  h+='</tr><tr>';
+  for(let i=0;i<6;i++)h+=`<th data-hc="${i}">Muñeca ${i%3+1}</th>`;
+  h+='</tr></thead><tbody>';
+  for(let a=1;a<=6;a++){
+    h+=`<tr><th data-hr="${a}">${a}</th>`;
+    TABLE_B[a-1].forEach((v,i)=>{h+=`<td data-k="${a}-${i}">${v}</td>`;});
+    h+='</tr>';
+  }
+  return h+'</tbody></table>';
+}
+function buildTableC(){
+  let h='<table class="tbl" id="tC"><thead><tr><th>A \\ B</th>';
+  for(let b=1;b<=12;b++)h+=`<th data-hc="${b}">${b}</th>`;
+  h+='</tr></thead><tbody>';
+  for(let a=1;a<=12;a++){
+    h+=`<tr><th data-hr="${a}">${a}</th>`;
+    TABLE_C[a-1].forEach((v,i)=>{h+=`<td class="c${levelOf(v)}" data-k="${a}-${i+1}">${v}</td>`;});
+    h+='</tr>';
+  }
+  return h+'</tbody></table>';
+}
+function mark(tbl,o){
+  $$('.hit,.hit-h',tbl).forEach(x=>x.classList.remove('hit','hit-h'));
+  const c=tbl.querySelector(`td[data-k="${o.k}"]`); if(c)c.classList.add('hit');
+  [['data-hr',o.hr],['data-hc',o.hc],['data-hw',o.hw]].forEach(([a,v])=>{
+    if(v!==undefined){const e=tbl.querySelector(`th[${a}="${v}"]`); if(e)e.classList.add('hit-h');}
+  });
+}
+
+/* ---------- Estado ---------- */
+const today=()=>new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,10);
+const aDef=()=>({neck:1,nAdj:false,trunk:1,tAdj:false,legs:1,knee:0,load:0,shock:false});
+const sideDef=()=>({upper:1,abd:false,raised:false,support:false,lower:1,wrist:1,wAdj:false,coupling:0});
+const actDef=()=>({stat:false,rep:false,rapid:false});
+const metaDef=()=>({evaluator:'',team:'',date:today(),company:'',dept:'',supervisor:'',task:'',desc:'',media:'',notes:'',side:'both'});
+let state={meta:metaDef(),A:aDef(),L:sideDef(),R:sideDef(),act:actDef(),tab:'R',pane:1,viewSide:null};
+const tgt=k=>state[k];
+
+/* ---------- Cálculo ---------- */
+function calcA(a){
+  const neck=clamp(a.neck+(a.nAdj?1:0),1,3);
+  const trunk=clamp(a.trunk+(a.tAdj?1:0),1,5);
+  const legs=clamp(a.legs+a.knee,1,4);
+  const idx=(neck-1)*4+(legs-1);
+  const post=TABLE_A[trunk-1][idx];
+  const loadPts=a.load+(a.shock?1:0);
+  return {neck,trunk,legs,idx,post,loadPts,A:clamp(post+loadPts,1,12)};
+}
+function calcSide(s){
+  const upper=clamp(s.upper+(s.abd?1:0)+(s.raised?1:0)-(s.support?1:0),1,6);
+  const lower=s.lower;
+  const wrist=clamp(s.wrist+(s.wAdj?1:0),1,3);
+  const idx=(lower-1)*3+(wrist-1);
+  const post=TABLE_B[upper-1][idx];
+  return {upper,lower,wrist,idx,post,coup:s.coupling,B:clamp(post+s.coupling,1,12)};
+}
+function compute(){
+  const a=calcA(state.A);
+  const act=(state.act.stat?1:0)+(state.act.rep?1:0)+(state.act.rapid?1:0);
+  const rs={L:calcSide(state.L),R:calcSide(state.R)};
+  const C={},fin={};
+  ['L','R'].forEach(k=>{C[k]=TABLE_C[a.A-1][rs[k].B-1];fin[k]=C[k]+act;});
+  const vis=state.meta.side==='both'?['L','R']:[state.meta.side];
+  const max=Math.max(...vis.map(k=>fin[k]));
+  return {a,act,rs,C,fin,vis,max,crit:vis.filter(k=>fin[k]===max)};
+}
+const fmtSign=n=>n>0?'+'+n:String(n);
+
+/* ---------- Render ---------- */
+function render(){
+  const r=compute();
+  const out={};
+  const a=r.a;
+  out['A.neck']=a.neck;out['A.trunk']=a.trunk;out['A.legs']=a.legs;out['A.post']=a.post;
+  out['A.load']=fmtSign(a.loadPts);out['A.loadpts']=a.loadPts;out['A.A']=a.A;
+  out['A.Af']=`${a.post} + ${a.loadPts} = ${a.A}`;
+  out['act.pts']=r.act;
+  ['L','R'].forEach(k=>{
+    const x=r.rs[k];
+    out[k+'.upper']=x.upper;out[k+'.lower']=x.lower;out[k+'.wrist']=x.wrist;out[k+'.post']=x.post;
+    out[k+'.coup']=fmtSign(x.coup);out[k+'.coupPts']=x.coup;out[k+'.B']=x.B;
+    out[k+'.Bf']=`${x.post} + ${x.coup} = ${x.B}`;
+    out[k+'.C']=r.C[k];out[k+'.CAB']=`A = ${a.A}, B = ${x.B}: C = ${r.C[k]}`;
+    out[k+'.final']=r.fin[k];out[k+'.finalf']=`${r.C[k]} + ${r.act} = ${r.fin[k]}`;
+    const lv=levelOf(r.fin[k]);
+    out[k+'.lvlT']=`Nivel de actuación ${lv}: ${LEVELS[lv].n.toLowerCase()}`;out[k+'.lvlD']=LEVELS[lv].d;
+    const card=$(`.res-card[data-side="${k}"]`); if(card)card.dataset.level=lv;
+  });
+  const lvl=levelOf(r.max);
+  out['live.score']=r.max;out['live.title']=`Nivel ${lvl}: ${LEVELS[lvl].n.toLowerCase()}`;out['live.desc']=LEVELS[lvl].d;
+  out['live.side']=r.vis.length===1?`Lado ${SIDE_NAME[r.vis[0]]}`:(r.crit.length===2?'Ambos lados con la misma puntuación':`Lado más exigente: ${SIDE_NAME[r.crit[0]]}`);
+  // tablas
+  const vs=r.vis.length===1?r.vis[0]:(state.viewSide&&r.vis.includes(state.viewSide)?state.viewSide:r.crit[0]);
+  const x=r.rs[vs];
+  mark($('#tA'),{k:`${a.trunk}-${a.idx}`,hr:a.trunk,hw:a.neck,hc:a.idx});
+  mark($('#tB'),{k:`${x.upper}-${x.idx}`,hr:x.upper,hw:x.lower,hc:x.idx});
+  mark($('#tC'),{k:`${a.A}-${x.B}`,hr:a.A,hc:x.B});
+  out['t.A']=`cuello ${a.neck}, tronco ${a.trunk}, piernas ${a.legs}: resultado ${a.post}`;
+  out['t.B']=`(lado ${SIDE_NAME[vs]}) brazo ${x.upper}, antebrazo ${x.lower}, muñeca ${x.wrist}: resultado ${x.post}`;
+  out['t.C']=`(lado ${SIDE_NAME[vs]}) A = ${a.A}, B = ${x.B}: resultado ${r.C[vs]}, más actividad ${r.act} = ${r.fin[vs]}`;
+  $$('[data-out]').forEach(el=>{const v=out[el.dataset.out]; if(v!==undefined)el.textContent=v;});
+  ['live','mbar'].forEach(id=>{const e=document.getElementById(id); if(e)e.dataset.level=lvl;});
+  document.body.dataset.level=lvl;
+  document.body.dataset.sides=state.meta.side;
+  $('#mk').style.left=((r.max-.5)/15*100)+'%';
+  $$('#levels .lv').forEach(e=>e.classList.toggle('now',+e.dataset.level===lvl));
+  const tsr=$('#tblSide'); tsr.hidden=r.vis.length===1;
+  $$('input[name="tblSide"]',tsr).forEach(i=>{i.checked=i.value===vs;});
+  updateSidePanels();
+  $('#reportText').value=buildReport(r,vs);
+}
+function updateSidePanels(){
+  const both=state.meta.side==='both';
+  const vis=both?state.tab:state.meta.side;
+  $$('.side-panel').forEach(p=>{p.hidden=p.dataset.side!==vis;});
+  $$('#sideTabs [data-tab]').forEach(b=>{b.hidden=!both;b.classList.toggle('on',b.dataset.tab===state.tab);b.setAttribute('aria-selected',b.dataset.tab===state.tab);});
+  const cp=$('#copySide');
+  cp.hidden=!both;
+  if(both){const other=state.tab==='L'?'R':'L';cp.textContent=`Copiar valores del lado ${SIDE_NAME[other]}`;}
+  $('#sideTabs').style.display=both?'':'none';
+}
+
+/* ---------- Reporte ---------- */
+function adjText(s,list){const a=list.filter(([f])=>s[f]).map(([,t])=>t);return a.length?' ('+a.join('; ')+')':'';}
+function buildReport(r,vs){
+  const m=state.meta,L=[],A=state.A,y=r.a;
+  const v=x=>x&&String(x).trim()?String(x).trim():'—';
+  L.push('Evaluación postural con el método REBA');
+  L.push('Asignatura: Taller de Ergonomía e Ingeniería de Métodos');
+  L.push('');
+  L.push(`Evaluador o evaluadora: ${v(m.evaluator)}`);
+  L.push(`Grupo o equipo: ${v(m.team)}`);
+  L.push(`Fecha: ${v(m.date)}`);
+  L.push(`Empresa: ${v(m.company)}   Departamento: ${v(m.dept)}   Supervisor: ${v(m.supervisor)}`);
+  L.push(`Tarea: ${v(m.task)}`);
+  L.push(`Descripción: ${v(m.desc)}`);
+  L.push(`Referencia de foto o video: ${v(m.media)}`);
+  L.push(`Lados evaluados: ${r.vis.length===2?'izquierdo y derecho':SIDE_NAME[r.vis[0]]}`);
+  L.push('');
+  L.push('Grupo A (ambos lados)');
+  L.push(`- Cuello: ${y.neck}, base ${A.neck} (${BASE_TXT.neck[A.neck]})${adjText(A,[['nAdj','rotación o inclinación lateral +1']])}`);
+  L.push(`- Tronco: ${y.trunk}, base ${A.trunk} (${BASE_TXT.trunk[A.trunk]})${adjText(A,[['tAdj','inclinación lateral o rotación +1']])}`);
+  L.push(`- Piernas: ${y.legs}, base ${A.legs} (${BASE_TXT.legs[A.legs]}), rodillas: ${KNEE_TXT[A.knee]}${A.knee?' +'+A.knee:''}`);
+  L.push(`- Puntuación postural A (Tabla A): ${y.post}`);
+  L.push(`- Carga o fuerza: ${fmtSign(y.loadPts)} (${LOAD_TXT[A.load]}${A.shock?', con fuerza brusca +1':''})`);
+  L.push(`- Puntuación A: ${y.post} + ${y.loadPts} = ${y.A}`);
+  r.vis.forEach(k=>{
+    const s=state[k],x=r.rs[k];
+    L.push('');
+    L.push(`Grupo B, lado ${SIDE_NAME[k]}`);
+    L.push(`- Brazo: ${x.upper}, base ${s.upper} (${BASE_TXT.upper[s.upper]})${adjText(s,[['abd','abducido o rotado +1'],['raised','hombro elevado +1'],['support','apoyo o gravedad −1']])}`);
+    L.push(`- Antebrazo: ${x.lower} (${BASE_TXT.lower[x.lower]})`);
+    L.push(`- Muñeca: ${x.wrist}, base ${s.wrist} (${BASE_TXT.wrist[s.wrist]})${adjText(s,[['wAdj','torsión o desviación +1']])}`);
+    L.push(`- Puntuación postural B (Tabla B): ${x.post}`);
+    L.push(`- Calidad del agarre: ${COUPLING_TXT[x.coup].toLowerCase()} (${fmtSign(x.coup)})`);
+    L.push(`- Puntuación B: ${x.post} + ${x.coup} = ${x.B}`);
+  });
+  L.push('');
+  L.push('Actividad muscular');
+  const st=state.act;
+  L.push(`- Partes del cuerpo estáticas más de 1 minuto: ${st.stat?'sí +1':'no'}`);
+  L.push(`- Movimientos repetitivos más de 4 veces por minuto: ${st.rep?'sí +1':'no'}`);
+  L.push(`- Cambios de postura importantes o posturas inestables: ${st.rapid?'sí +1':'no'}`);
+  L.push(`- Puntuación de actividad: ${r.act}`);
+  L.push('');
+  L.push('Resultado');
+  r.vis.forEach(k=>{
+    const lv=levelOf(r.fin[k]);
+    L.push(`- Lado ${SIDE_NAME[k]}: puntuación final ${r.fin[k]} (Tabla C, A = ${y.A}, B = ${r.rs[k].B}, C = ${r.C[k]}, más actividad ${r.act}). Nivel de actuación ${lv}, ${LEVELS[lv].n.toLowerCase()}. ${LEVELS[lv].d}`);
+  });
+  if(r.vis.length===2)L.push(r.crit.length===2?'- Ambos lados obtienen la misma puntuación.':`- Lado más exigente: ${SIDE_NAME[r.crit[0]]}.`);
+  if(m.notes&&m.notes.trim()){L.push('');L.push('Notas de la evaluación');L.push(m.notes.trim());}
+  L.push('');
+  L.push('Referencia: Hignett y McAtamney (2000), Applied Ergonomics, 31(2), 201-205.');
+  return L.join('\n');
+}
+
+/* ---------- Interacción ---------- */
+function syncInputs(){
+  $$('input[data-field]').forEach(i=>{
+    const val=tgt(i.dataset.side)[i.dataset.field];
+    i.checked=i.type==='checkbox'?!!val:String(val)===i.value;
+  });
+  $$('[data-meta]').forEach(i=>{
+    const val=state.meta[i.dataset.meta];
+    if(i.type==='radio')i.checked=i.value===val;else i.value=val;
+  });
+}
+document.addEventListener('change',e=>{
+  const t=e.target;
+  if(t.name==='tblSide'){state.viewSide=t.value;render();return;}
+  if(t.dataset.meta==='side'){state.meta.side=t.value;render();return;}
+  if(t.dataset.field){
+    tgt(t.dataset.side)[t.dataset.field]=t.type==='checkbox'?t.checked:Number(t.value);
+    render();
+  }
+});
+document.addEventListener('input',e=>{
+  const t=e.target;
+  if(t.dataset.meta&&t.type!=='radio'){state.meta[t.dataset.meta]=t.value;render();}
+});
+const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const LAST=5;
+function showPane(n,noScroll){
+  state.pane=n;
+  $$('.pane').forEach(p=>p.classList.toggle('active',+p.dataset.pane===n));
+  $$('#stepper button').forEach(b=>{const on=+b.dataset.pane===n;b.classList.toggle('on',on);b.setAttribute('aria-selected',on);b.tabIndex=on?0:-1;});
+  if(!noScroll)$('#tool').scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
+}
+$$('#stepper button').forEach(b=>{
+  b.addEventListener('click',()=>showPane(+b.dataset.pane));
+  b.addEventListener('keydown',e=>{
+    if(e.key!=='ArrowRight'&&e.key!=='ArrowLeft')return;
+    const n=clamp(state.pane+(e.key==='ArrowRight'?1:-1),1,LAST);showPane(n,true);
+    $(`#stepper button[data-pane="${n}"]`).focus();
+  });
+});
+document.addEventListener('click',e=>{
+  const go=e.target.closest('[data-go]'); if(go){showPane(+go.dataset.go);return;}
+  const tab=e.target.closest('[data-tab]'); if(tab){state.tab=tab.dataset.tab;render();return;}
+});
+$('#copySide').addEventListener('click',()=>{
+  const other=state.tab==='L'?'R':'L';
+  state[state.tab]=Object.assign({},state[other]);
+  syncInputs();render();
+});
+$('#recalc').addEventListener('click',()=>{render();const f=$('.final');f.animate&&!reduce&&f.animate([{transform:'scale(1)'},{transform:'scale(1.03)'},{transform:'scale(1)'}],{duration:260});});
+$('#toSummary').addEventListener('click',()=>showPane(5));
+$('#mbarBtn').addEventListener('click',()=>{$('#live').scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});});
+let resetTimer=null;
+$('#reset').addEventListener('click',function(){
+  const b=this;
+  if(b.dataset.armed){
+    clearTimeout(resetTimer);delete b.dataset.armed;b.textContent='Reiniciar';b.classList.remove('danger');
+    state={meta:metaDef(),A:aDef(),L:sideDef(),R:sideDef(),act:actDef(),tab:'R',pane:state.pane,viewSide:null};
+    syncInputs();render();$('#copyMsg').textContent='';
+  }else{
+    b.dataset.armed='1';b.textContent='Confirmar reinicio';b.classList.add('danger');
+    resetTimer=setTimeout(()=>{delete b.dataset.armed;b.textContent='Reiniciar';b.classList.remove('danger');},3500);
+  }
+});
+$('#copyBtn').addEventListener('click',async()=>{
+  const ta=$('#reportText'),msg=$('#copyMsg');
+  const ok=()=>{msg.textContent='Texto copiado';setTimeout(()=>{msg.textContent='';},2500);};
+  const fail=()=>{msg.textContent='No se pudo copiar. Selecciona el texto y cópialo manualmente.';};
+  try{await navigator.clipboard.writeText(ta.value);ok();}
+  catch(_){try{ta.focus();ta.select();document.execCommand('copy')?ok():fail();}catch(__){fail();}}
+});
+$('#printBtn').addEventListener('click',()=>{showPane(5,true);try{window.print();}catch(_){}});
+
+/* ---------- Inicio ---------- */
+$('#panelA').innerHTML=panelA();
+$('#panelsB').innerHTML=panelB('L')+panelB('R');
+$('#panelAct').innerHTML=panelAct();
+$('#wrapA').innerHTML=buildTableA();
+$('#wrapB').innerHTML=buildTableB();
+$('#wrapC').innerHTML=buildTableC();
+$('#levels').innerHTML=[0,1,2,3,4].map(n=>`<div class="lv" data-level="${n}"><b>Puntuación ${LEVELS[n].range}</b><span><strong>Nivel ${n}, ${LEVELS[n].n.toLowerCase()}.</strong> ${LEVELS[n].d}</span></div>`).join('');
+// escala 1..15
+$('#scale').innerHTML=Array.from({length:15},(_,i)=>`<i class="c${levelOf(i+1)}">${i+1}</i>`).join('')+'<span class="mk" id="mk"></span>';
+syncInputs();
+showPane(1,true);
+render();
+})();
+</script>
+</body>
+</html>
