@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Calculadora RULA · Taller de Ergonomía e Ingeniería de Métodos</title>
+<meta name="description" content="Calculadora interactiva del método RULA (Rapid Upper Limb Assessment): puntúa brazo, antebrazo, muñeca, cuello, tronco y piernas, obtén la puntuación final de 1 a 7 con su nivel de actuación y genera un reporte imprimible.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0f2540" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#08111c" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2038%2038%27%3E%3Crect%20width%3D%2738%27%20height%3D%2738%27%20rx%3D%279%27%20fill%3D%27%23f2b134%27%2F%3E%3Ccircle%20cx%3D%2719%27%20cy%3D%279%27%20r%3D%273.6%27%20fill%3D%27%230f2540%27%2F%3E%3Cpath%20d%3D%27M19%2013.5v9.5M19%2023l-5.5%209M19%2023l5.5%209%27%20stroke%3D%27%230f2540%27%20stroke-width%3D%273%27%20stroke-linecap%3D%27round%27%20fill%3D%27none%27%2F%3E%3Cpath%20d%3D%27M19%2016l8%205%27%20stroke%3D%27%230f2540%27%20stroke-width%3D%273%27%20stroke-linecap%3D%27round%27%2F%3E%3Cpath%20d%3D%27M19%2026a8%208%200%200%201%206.6-2.4%27%20stroke%3D%27%230f2540%27%20stroke-width%3D%271.6%27%20fill%3D%27none%27%20stroke-linecap%3D%27round%27%2F%3E%3C%2Fsvg%3E">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ErgoTools">
+<meta property="og:title" content="Calculadora RULA · Taller de Ergonomía e Ingeniería de Métodos">
+<meta property="og:description" content="Evaluación rápida de miembros superiores con el método RULA: puntuación final, nivel de actuación y reporte imprimible.">
+<meta property="og:locale" content="es">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#eef2f6; --surface:#ffffff; --surface-2:#f5f8fb; --ink:#12233a; --ink-2:#51627a; --line:#d6dfea;
+  --accent:#0b6b86; --accent-2:#e4f2f7; --on-accent:#ffffff;
+  --nav:#0f2540; --nav-ink:#eaf2fa; --gold:#f2b134;
+  --lv1:#2b9a5b; --lv1-s:#e2f4ea; --lv1-ink:#17663a;
+  --lv2:#d6a400; --lv2-s:#fbf1cf; --lv2-ink:#6f5200;
+  --lv3:#e47a1c; --lv3-s:#fde9d3; --lv3-ink:#914305;
+  --lv4:#cf3636; --lv4-s:#fbe0e0; --lv4-ink:#9b1f1f;
+  --gauge-fill:rgba(11,107,134,.2);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0c1522; --surface:#132133; --surface-2:#182a40; --ink:#e6eef8; --ink-2:#9fb1c7; --line:#27405c;
+    --accent:#5ec2df; --accent-2:#12384a; --on-accent:#06202b;
+    --nav:#08111c; --nav-ink:#eaf2fa;
+    --lv1:#4cc584; --lv1-s:#153a29; --lv1-ink:#8fe3b3;
+    --lv2:#e8be3a; --lv2-s:#3a3212; --lv2-ink:#f2d878;
+    --lv3:#f39a4b; --lv3-s:#402a14; --lv3-ink:#f8bd88;
+    --lv4:#f26b6b; --lv4-s:#421b1b; --lv4-ink:#ffa5a5;
+    --gauge-fill:rgba(94,194,223,.24);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0c1522; --surface:#132133; --surface-2:#182a40; --ink:#e6eef8; --ink-2:#9fb1c7; --line:#27405c;
+  --accent:#5ec2df; --accent-2:#12384a; --on-accent:#06202b;
+  --nav:#08111c; --nav-ink:#eaf2fa;
+  --lv1:#4cc584; --lv1-s:#153a29; --lv1-ink:#8fe3b3;
+  --lv2:#e8be3a; --lv2-s:#3a3212; --lv2-ink:#f2d878;
+  --lv3:#f39a4b; --lv3-s:#402a14; --lv3-ink:#f8bd88;
+  --lv4:#f26b6b; --lv4-s:#421b1b; --lv4-ink:#ffa5a5;
+  --gauge-fill:rgba(94,194,223,.24);
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;-webkit-text-size-adjust:100%}
+[data-level="1"]{--lvl:var(--lv1);--lvl-s:var(--lv1-s);--lvl-ink:var(--lv1-ink)}
+[data-level="2"]{--lvl:var(--lv2);--lvl-s:var(--lv2-s);--lvl-ink:var(--lv2-ink)}
+[data-level="3"]{--lvl:var(--lv3);--lvl-s:var(--lv3-s);--lvl-ink:var(--lv3-ink)}
+[data-level="4"]{--lvl:var(--lv4);--lvl-s:var(--lv4-s);--lvl-ink:var(--lv4-ink)}
+[data-sides="L"] .col-R,[data-sides="R"] .col-L{display:none}
+h1,h2,h3,h4,p{margin:0}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+button{font:inherit;color:inherit}
+
+/* Barra de la asignatura */
+.course-bar{background:var(--nav);color:var(--nav-ink)}
+.course-bar .in{max-width:1180px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.course-bar svg{flex:none}
+.course-bar .name{display:flex;flex-direction:column;line-height:1.25;min-width:0}
+.course-bar .name strong{font-size:1.05rem;font-weight:700}
+.course-bar .name span{font-size:.82rem;opacity:.78}
+.course-bar .tag{margin-left:auto;border:1px solid var(--gold);color:var(--gold);border-radius:999px;padding:3px 12px;font-size:.85rem;font-weight:600}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+.crumbs{padding:18px 0 4px;color:var(--ink-2);font-size:.9rem}
+.crumbs b{color:var(--ink);font-weight:600}
+h1{font-size:clamp(1.7rem,3.2vw,2.5rem);line-height:1.15;font-weight:700;letter-spacing:-.015em;margin:6px 0 10px}
+.lead{color:var(--ink-2);max-width:66ch}
+.course-note{margin:18px 0;background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:10px;padding:14px 18px;display:grid;gap:2px}
+.course-note strong{font-size:1.02rem}
+.course-note span{color:var(--ink-2);font-size:.95rem;max-width:80ch}
+
+/* Cómo se calcula */
+details.how{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:18px}
+details.how summary{cursor:pointer;padding:14px 18px;font-weight:600;list-style:none;display:flex;align-items:center;gap:10px}
+details.how summary::-webkit-details-marker{display:none}
+details.how summary::before{content:"";width:8px;height:8px;border-right:2px solid var(--ink-2);border-bottom:2px solid var(--ink-2);transform:rotate(-45deg);transition:transform .15s}
+details.how[open] summary::before{transform:rotate(45deg)}
+.flow{padding:0 18px 18px;display:grid;gap:10px}
+.flow .row{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.flow .chip{background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:.88rem}
+.flow .chip.strong{background:var(--accent-2);border-color:var(--accent);font-weight:600}
+.flow .chev{width:14px;height:14px;flex:none;stroke:var(--ink-2);fill:none;stroke-width:2}
+.flow .lbl{font-weight:600;min-width:74px}
+
+/* Pasos */
+.stepper{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);padding:8px 0;margin:0 0 18px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.stepper button{display:flex;align-items:center;gap:10px;border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 12px;cursor:pointer;text-align:left;min-width:0}
+.stepper button .n{flex:none;width:26px;height:26px;border-radius:50%;background:var(--surface-2);border:1.5px solid var(--line);display:grid;place-items:center;font-weight:700;font-size:.85rem}
+.stepper button span.t{font-weight:600;font-size:.93rem;line-height:1.2;overflow-wrap:anywhere}
+.stepper button.on{border-color:var(--accent);background:var(--accent-2)}
+.stepper button.on .n{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:24px;align-items:start;padding-bottom:40px}
+.pane{display:none}
+.pane.active{display:block}
+.pane>*+*{margin-top:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px}
+.card h2{font-size:1.4rem;line-height:1.25;margin-bottom:6px}
+.card>.lead{margin-bottom:0}
+
+/* Formulario de datos */
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 16px;margin-top:16px}
+.fields .full{grid-column:1/-1}
+.field label,.field .lab{display:block;font-weight:600;font-size:.92rem;margin-bottom:5px}
+.field input[type=text],.field input[type=date],.field textarea{width:100%;border:1.5px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--ink);padding:9px 11px;font:inherit}
+.field textarea{min-height:88px;resize:vertical}
+.field input:focus-visible,.field textarea:focus-visible{border-color:var(--accent)}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg label{position:relative;margin:0;font-weight:500}
+.seg input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.seg span{display:block;border:1.5px solid var(--line);border-radius:999px;padding:7px 16px;background:var(--surface-2);cursor:pointer}
+.seg input:checked+span{border-color:var(--accent);background:var(--accent-2);font-weight:600}
+.seg input:focus-visible+span{outline:3px solid var(--accent);outline-offset:2px}
+
+/* Tarjetas de paso */
+.step-h{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:6px}
+.step-n{display:block;color:var(--accent);font-weight:600;font-size:.85rem}
+.step h3{font-size:1.15rem;line-height:1.3}
+.score-pill{flex:none;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:3px 12px;font-size:.88rem;white-space:nowrap}
+.score-pill b{font-size:1.05rem;font-variant-numeric:tabular-nums}
+.hint{color:var(--ink-2);font-size:.93rem;margin-bottom:12px;max-width:70ch}
+.sub{font-size:.95rem;margin:16px 0 8px}
+.opts{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.opts.list{grid-template-columns:1fr}
+.opts.two{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.opt{position:relative;display:block;cursor:pointer}
+.opt input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer;z-index:1}
+.opt-body{display:flex;flex-direction:column;gap:6px;height:100%;padding:10px;border:1.5px solid var(--line);border-radius:10px;background:var(--surface-2);transition:border-color .15s,background .15s}
+.opt input:checked+.opt-body{border-color:var(--accent);background:var(--accent-2);box-shadow:inset 0 0 0 1px var(--accent)}
+.opt input:focus-visible+.opt-body{outline:3px solid var(--accent);outline-offset:2px}
+.opt-head{display:flex;align-items:flex-start;gap:8px}
+.opt-t{font-weight:600;font-size:.93rem;line-height:1.3}
+.opt-s{color:var(--ink-2);font-size:.83rem;line-height:1.35}
+.pt{flex:none;background:var(--ink);color:var(--surface);border-radius:6px;padding:0 7px;font-size:.8rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.55}
+.pt.neg{background:var(--lv1);color:#fff}
+.gauge{display:block;width:100%;height:auto;max-height:112px}
+.g-sec{fill:var(--gauge-fill);stroke:var(--accent);stroke-width:1.2}
+.g-ref{stroke:var(--ink-2);stroke-width:2;fill:none}
+.g-ref.dash{stroke-dasharray:4 4;stroke-width:1.6}
+.g-fix{stroke:var(--ink-2);stroke-width:3;stroke-linecap:round}
+.g-seg{stroke:var(--ink);stroke-width:3.5;stroke-linecap:round;fill:none}
+.g-dot{fill:var(--ink)}
+.g-joint{fill:var(--surface);stroke:var(--ink);stroke-width:2}
+.g-head{fill:var(--surface);stroke:var(--ink);stroke-width:3}
+.g-ground{stroke:var(--ink-2);stroke-width:2}
+.chks{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.chk{position:relative;display:block;cursor:pointer}
+.chk input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer;z-index:1}
+.chk-body{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--surface-2);font-size:.92rem;line-height:1.35;height:100%}
+.chk input:checked+.chk-body{border-color:var(--accent);background:var(--accent-2);box-shadow:inset 0 0 0 1px var(--accent)}
+.chk input:focus-visible+.chk-body{outline:3px solid var(--accent);outline-offset:2px}
+.calc{display:flex;justify-content:space-between;align-items:center;gap:16px;background:var(--surface-2);border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:10px;padding:14px 18px}
+.calc>div{display:grid;gap:1px;min-width:0}
+.calc small{color:var(--ink-2);font-size:.85rem}
+.calc .formula{font-variant-numeric:tabular-nums}
+.big{font-family:'IBM Plex Sans Condensed','IBM Plex Sans',system-ui,sans-serif;font-weight:700;font-size:2.4rem;line-height:1;font-variant-numeric:tabular-nums}
+
+.side-tabs{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.side-tabs button{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 16px;cursor:pointer;font-weight:600}
+.side-tabs button.on{border-color:var(--accent);background:var(--accent-2)}
+.side-tabs .copy{margin-left:auto;font-weight:500;font-size:.88rem;border-radius:8px;background:transparent}
+.side-h{font-size:1.15rem;margin:0 0 -4px;color:var(--ink-2);font-weight:600}
+.side-panel>*+*{margin-top:16px}
+
+.nav-btns{display:flex;justify-content:space-between;gap:10px;margin-top:20px}
+.btn{border:1.5px solid var(--accent);background:var(--accent);color:var(--on-accent);border-radius:9px;padding:9px 18px;font-weight:600;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--accent)}
+.btn:hover{filter:brightness(1.06)}
+.btn.danger{border-color:var(--lv4);color:var(--lv4-ink);background:var(--lv4-s)}
+
+/* Puntuación en vivo */
+.live{position:sticky;top:calc(env(safe-area-inset-top,0px) + 76px);max-height:calc(100dvh - 96px);overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px}
+.live h2{font-size:1.1rem;margin-bottom:2px}
+.live .sub-l{color:var(--ink-2);font-size:.85rem;margin-bottom:12px}
+.final{display:flex;align-items:center;gap:14px;background:var(--lvl-s);border-radius:12px;padding:12px 14px}
+.final .big{font-size:3.6rem;color:var(--lvl-ink)}
+.final .txt{display:grid;gap:2px;min-width:0}
+.final .txt strong{color:var(--lvl-ink);font-size:.98rem;line-height:1.25}
+.final .txt span{font-size:.85rem;color:var(--ink)}
+.scale{position:relative;display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin:22px 0 4px}
+.scale i{font-style:normal;text-align:center;font-size:.8rem;font-weight:600;padding:3px 0;border-bottom:4px solid;border-radius:4px 4px 0 0}
+.scale i.c1{background:var(--lv1-s);border-color:var(--lv1)}
+.scale i.c2{background:var(--lv2-s);border-color:var(--lv2)}
+.scale i.c3{background:var(--lv3-s);border-color:var(--lv3)}
+.scale i.c4{background:var(--lv4-s);border-color:var(--lv4)}
+.scale .mk{position:absolute;top:-14px;width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:10px solid var(--ink);transform:translateX(-50%);transition:left .2s}
+table.mini{width:100%;border-collapse:collapse;margin-top:10px;font-size:.9rem}
+table.mini th,table.mini td{padding:5px 6px;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums}
+table.mini th:first-child,table.mini td:first-child{text-align:left}
+table.mini thead th{font-weight:600;color:var(--ink-2);font-size:.82rem}
+table.mini tr.grp td{background:var(--surface-2);font-weight:600;color:var(--ink-2);text-align:left;font-size:.82rem}
+table.mini tr.tot td{font-weight:700}
+table.mini td b{font-weight:700}
+.live .btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.live .btns .btn{padding:7px 12px;font-size:.88rem;flex:1 1 auto}
+
+/* Resumen */
+.results{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.res-card{background:var(--lvl-s);border:1px solid var(--lvl);border-radius:12px;padding:16px 18px;display:grid;gap:6px}
+.res-card .who{font-weight:600}
+.res-card .top{display:flex;align-items:center;gap:14px}
+.res-card .big{font-size:3.2rem;color:var(--lvl-ink)}
+.res-card strong{color:var(--lvl-ink)}
+.res-card p{font-size:.92rem}
+.res-card small{color:var(--ink-2)}
+.two-col{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.tbl-wrap{overflow-x:auto;max-width:100%;border:1px solid var(--line);border-radius:8px}
+table.tbl{border-collapse:collapse;width:100%;font-size:.82rem;font-variant-numeric:tabular-nums;text-align:center}
+table.tbl th,table.tbl td{border:1px solid var(--line);padding:4px 6px;min-width:34px}
+table.tbl th{background:var(--surface-2);font-weight:600}
+table.tbl td.hit{background:var(--accent);color:var(--on-accent);font-weight:700;outline:2px solid var(--ink);outline-offset:-2px}
+table.tbl th.hit-h{background:var(--accent-2);color:var(--ink);box-shadow:inset 0 -3px 0 var(--accent)}
+table.tbl td.c1{background:var(--lv1-s)} table.tbl td.c2{background:var(--lv2-s)} table.tbl td.c3{background:var(--lv3-s)} table.tbl td.c4{background:var(--lv4-s)}
+table.tbl td.hit.c1,table.tbl td.hit.c2,table.tbl td.hit.c3,table.tbl td.hit.c4{background:var(--accent);color:var(--on-accent)}
+.tcap{font-size:.9rem;margin:14px 0 6px;font-weight:600}
+.tcap small{font-weight:400;color:var(--ink-2)}
+.levels{display:grid;gap:8px}
+.levels .lv{display:grid;grid-template-columns:92px 1fr;gap:12px;align-items:center;padding:9px 12px;border-radius:8px;border:1.5px solid transparent;background:var(--lvl-s)}
+.levels .lv b{color:var(--lvl-ink)}
+.levels .lv.now{border-color:var(--lvl-ink)}
+.levels .lv span{font-size:.92rem}
+textarea.report{width:100%;min-height:340px;border:1.5px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--ink);padding:12px;font:.86rem/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;resize:vertical}
+.rep-btns{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.msg{font-size:.9rem;color:var(--ink-2)}
+.refs{font-size:.88rem;color:var(--ink-2)}
+.refs p+p{margin-top:8px}
+.refs a{color:var(--accent)}
+footer.site{max-width:1180px;margin:0 auto;padding:0 20px 36px;color:var(--ink-2);font-size:.85rem}
+footer.site p{max-width:90ch}
+
+/* Barra móvil */
+.mbar{display:none}
+@media (max-width:960px){
+  .layout{grid-template-columns:1fr}
+  .live{position:static;max-height:none}
+  .mbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;align-items:center;gap:12px;background:var(--surface);border-top:3px solid var(--lvl);padding:8px 16px calc(8px + env(safe-area-inset-bottom,0px));box-shadow:0 -4px 16px rgba(0,0,0,.12)}
+  .mbar .big{font-size:1.9rem;color:var(--lvl-ink)}
+  .mbar .t{display:grid;line-height:1.2;font-size:.85rem;min-width:0;flex:1}
+  .mbar .t strong{color:var(--lvl-ink)}
+  body{padding-bottom:78px}
+}
+@media (max-width:640px){
+  .stepper{grid-template-columns:repeat(4,1fr)}
+  .stepper button{flex-direction:column;gap:4px;padding:8px 4px;text-align:center}
+  .stepper button span.t{font-size:.72rem}
+  .fields{grid-template-columns:1fr}
+  .opts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .opts.list,.opts.two{grid-template-columns:1fr}
+  .card{padding:16px}
+  .course-bar .tag{margin-left:0}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+@media print{
+  body{background:#fff;color:#000;padding-bottom:0}
+  .course-bar .tag,.crumbs,.course-note,details.how,.stepper,.live,.mbar,.nav-btns,.rep-btns,.pane:not([data-pane="4"]){display:none!important}
+  .pane[data-pane="4"]{display:block!important}
+  .layout{display:block}
+  .card,.res-card{break-inside:avoid;border-color:#999}
+  textarea.report{min-height:420px;border:1px solid #999;background:#fff;color:#000}
+}
+</style>
+</head>
+<body data-level="1" data-sides="both">
+
+<header class="course-bar">
+  <div class="in">
+    <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true">
+      <rect width="38" height="38" rx="9" fill="#f2b134"/>
+      <circle cx="19" cy="9" r="3.6" fill="#0f2540"/>
+      <path d="M19 13.5v9.5M19 23l-5.5 9M19 23l5.5 9" stroke="#0f2540" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <path d="M19 16l8 5" stroke="#0f2540" stroke-width="3" stroke-linecap="round"/>
+      <path d="M19 26a8 8 0 0 1 6.6-2.4" stroke="#0f2540" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    </svg>
+    <div class="name">
+      <strong>Taller de Ergonomía e Ingeniería de Métodos</strong>
+      <span>Herramienta de apoyo para la práctica de evaluación postural</span>
+    </div>
+    <span class="tag">Método RULA</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="crumbs">Herramientas de ergonomía física / <b>RULA</b></p>
+  <h1>Herramienta de puntuación RULA</h1>
+  <p class="lead">Evaluación rápida de miembros superiores (Rapid Upper Limb Assessment). Completa los campos de cada grupo y revisa la puntuación final y el nivel de actuación. El cálculo se actualiza mientras respondes.</p>
+
+  <div class="course-note">
+    <strong>Asignatura: Taller de Ergonomía e Ingeniería de Métodos</strong>
+    <span>Calculadora para la práctica de análisis postural. Registra tu nombre y el de tu equipo en el paso 1 para que aparezcan en el reporte que entregues.</span>
+  </div>
+
+  <details class="how">
+    <summary>¿Cómo se calcula la puntuación?</summary>
+    <div class="flow">
+      <div class="row"><span class="lbl">Grupo A</span>
+        <span class="chip">Brazo · antebrazo · muñeca · giro</span><svg class="chev" viewBox="0 0 14 14"><path d="M4 2l5 5-5 5"/></svg>
+        <span class="chip">Tabla A</span><svg class="chev" viewBox="0 0 14 14"><path d="M4 2l5 5-5 5"/></svg>
+        <span class="chip">+ uso muscular + fuerza</span><svg class="chev" viewBox="0 0 14 14"><path d="M4 2l5 5-5 5"/></svg>
+        <span class="chip strong">Puntuación C</span></div>
+      <div class="row"><span class="lbl">Grupo B</span>
+        <span class="chip">Cuello · tronco · piernas</span><svg class="chev" viewBox="0 0 14 14"><path d="M4 2l5 5-5 5"/></svg>
+        <span class="chip">Tabla B</span><svg class="chev" viewBox="0 0 14 14"><path d="M4 2l5 5-5 5"/></svg>
+        <span class="chip">+ uso muscular + fuerza</span><svg class="chev" viewBox="0 0 14 14"><path d="M4 2l5 5-5 5"/></svg>
+        <span class="chip strong">Puntuación D</span></div>
+      <div class="row"><span class="lbl">Resultado</span>
+        <span class="chip strong">C y D</span><svg class="chev" viewBox="0 0 14 14"><path d="M4 2l5 5-5 5"/></svg>
+        <span class="chip">Tabla C</span><svg class="chev" viewBox="0 0 14 14"><path d="M4 2l5 5-5 5"/></svg>
+        <span class="chip strong">Puntuación final (1 a 7)</span><svg class="chev" viewBox="0 0 14 14"><path d="M4 2l5 5-5 5"/></svg>
+        <span class="chip">Nivel de actuación (1 a 4)</span></div>
+    </div>
+  </details>
+
+  <div id="tool">
+    <nav class="stepper" id="stepper" role="tablist" aria-label="Pasos de la evaluación">
+      <button role="tab" data-pane="1" aria-selected="true"><span class="n">1</span><span class="t">Datos de la tarea</span></button>
+      <button role="tab" data-pane="2" aria-selected="false"><span class="n">2</span><span class="t">Grupo A: brazo y muñeca</span></button>
+      <button role="tab" data-pane="3" aria-selected="false"><span class="n">3</span><span class="t">Grupo B: cuello, tronco y piernas</span></button>
+      <button role="tab" data-pane="4" aria-selected="false"><span class="n">4</span><span class="t">Resumen y reporte</span></button>
+    </nav>
+
+    <div class="layout">
+      <div class="panes">
+
+        <!-- 1. Datos -->
+        <section class="pane active" data-pane="1" role="tabpanel">
+          <div class="card">
+            <h2>Datos de la tarea</h2>
+            <p class="lead">Registra la tarea evaluada, la postura observada y las notas que sean relevantes.</p>
+            <div class="fields">
+              <div class="field"><label for="m-evaluator">Evaluador o evaluadora</label><input id="m-evaluator" type="text" data-meta="evaluator" autocomplete="name"></div>
+              <div class="field"><label for="m-team">Grupo o equipo</label><input id="m-team" type="text" data-meta="team"></div>
+              <div class="field"><label for="m-date">Fecha</label><input id="m-date" type="date" data-meta="date"></div>
+              <div class="field"><label for="m-company">Empresa</label><input id="m-company" type="text" data-meta="company"></div>
+              <div class="field"><label for="m-dept">Departamento o área</label><input id="m-dept" type="text" data-meta="dept"></div>
+              <div class="field"><label for="m-supervisor">Supervisor o supervisora</label><input id="m-supervisor" type="text" data-meta="supervisor"></div>
+              <div class="field full"><label for="m-task">Nombre de la tarea</label><input id="m-task" type="text" data-meta="task"></div>
+              <div class="field full"><label for="m-desc">Descripción de la tarea</label><textarea id="m-desc" data-meta="desc" placeholder="Qué hace el trabajador, con qué herramientas, cada cuánto se repite la acción…"></textarea></div>
+              <div class="field full">
+                <span class="lab" id="lab-side">Lado a evaluar</span>
+                <div class="seg" role="radiogroup" aria-labelledby="lab-side">
+                  <label><input type="radio" name="metaSide" value="both" data-meta="side"><span>Ambos lados</span></label>
+                  <label><input type="radio" name="metaSide" value="R" data-meta="side"><span>Lado derecho</span></label>
+                  <label><input type="radio" name="metaSide" value="L" data-meta="side"><span>Lado izquierdo</span></label>
+                </div>
+                <p class="hint" style="margin:8px 0 0">RULA se aplica a cada lado por separado. Si dudas cuál está más exigido, evalúa ambos. El cuello, el tronco y las piernas se puntúan una sola vez.</p>
+              </div>
+              <div class="field full"><label for="m-media">Referencia de foto o video</label><input id="m-media" type="text" data-meta="media" placeholder="Nombre de archivo, enlace o número de fotograma"></div>
+            </div>
+          </div>
+          <div class="nav-btns"><span></span><button class="btn" data-go="2">Continuar al Grupo A</button></div>
+        </section>
+
+        <!-- 2. Grupo A -->
+        <section class="pane" data-pane="2" role="tabpanel">
+          <div class="card">
+            <h2>Grupo A: análisis de brazo y muñeca</h2>
+            <p class="lead">Puntúa brazo, antebrazo, muñeca y giro de muñeca. La herramienta consulta la Tabla A y añade el uso muscular y la fuerza o carga.</p>
+          </div>
+          <div class="side-tabs" id="sideTabs" role="tablist" aria-label="Lado evaluado">
+            <button role="tab" data-tab="L">Lado izquierdo (<span data-out="L.final">1</span>)</button>
+            <button role="tab" data-tab="R">Lado derecho (<span data-out="R.final">1</span>)</button>
+            <button class="copy" id="copySide" type="button"></button>
+          </div>
+          <div id="panelsA"></div>
+          <div class="nav-btns"><button class="btn ghost" data-go="1">Anterior</button><button class="btn" data-go="3">Continuar al Grupo B</button></div>
+        </section>
+
+        <!-- 3. Grupo B -->
+        <section class="pane" data-pane="3" role="tabpanel">
+          <div class="card">
+            <h2>Grupo B: análisis de cuello, tronco y piernas</h2>
+            <p class="lead">Puntúa cuello, tronco y piernas. La herramienta consulta la Tabla B y añade el uso muscular y la fuerza o carga. Este grupo se aplica a los dos lados.</p>
+          </div>
+          <div id="panelB"></div>
+          <div class="nav-btns"><button class="btn ghost" data-go="2">Anterior</button><button class="btn" data-go="4">Ver resumen</button></div>
+        </section>
+
+        <!-- 4. Resumen -->
+        <section class="pane" data-pane="4" role="tabpanel">
+          <div class="card">
+            <h2>Resumen y reporte</h2>
+            <p class="lead">Revisa las puntuaciones intermedias, la puntuación final y el nivel de actuación antes de imprimir o guardar el reporte.</p>
+          </div>
+
+          <div class="results" id="results">
+            <div class="res-card col-L" data-level="1" data-side="L">
+              <span class="who">Lado izquierdo</span>
+              <div class="top"><b class="big" data-out="L.final">1</b><div><strong data-out="L.lvlT"></strong><p data-out="L.lvlD"></p></div></div>
+              <small data-out="L.risk"></small>
+            </div>
+            <div class="res-card col-R" data-level="1" data-side="R">
+              <span class="who">Lado derecho</span>
+              <div class="top"><b class="big" data-out="R.final">1</b><div><strong data-out="R.lvlT"></strong><p data-out="R.lvlD"></p></div></div>
+              <small data-out="R.risk"></small>
+            </div>
+          </div>
+
+          <div class="two-col">
+            <div class="card">
+              <h3>Grupo A</h3>
+              <table class="mini">
+                <thead><tr><th></th><th class="col-L">Izq.</th><th class="col-R">Der.</th></tr></thead>
+                <tbody>
+                  <tr><td>Puntuación postural A (Tabla A)</td><td class="col-L"><b data-out="L.A"></b></td><td class="col-R"><b data-out="R.A"></b></td></tr>
+                  <tr><td>Uso muscular</td><td class="col-L" data-out="L.muscle"></td><td class="col-R" data-out="R.muscle"></td></tr>
+                  <tr><td>Fuerza o carga</td><td class="col-L" data-out="L.force"></td><td class="col-R" data-out="R.force"></td></tr>
+                  <tr class="tot"><td>Puntuación de brazo y muñeca (C)</td><td class="col-L" data-out="L.C"></td><td class="col-R" data-out="R.C"></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="card">
+              <h3>Grupo B</h3>
+              <table class="mini">
+                <tbody>
+                  <tr><td>Puntuación postural B (Tabla B)</td><td><b data-out="B.B"></b></td></tr>
+                  <tr><td>Uso muscular</td><td data-out="B.muscle"></td></tr>
+                  <tr><td>Fuerza o carga</td><td data-out="B.force"></td></tr>
+                  <tr class="tot"><td>Puntuación de cuello, tronco y piernas (D)</td><td data-out="B.D"></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Niveles de actuación</h3>
+            <p class="hint" style="margin-top:4px">El nivel resaltado corresponde a la puntuación final más alta entre los lados evaluados.</p>
+            <div class="levels" id="levels"></div>
+          </div>
+
+          <div class="card">
+            <h3>Consulta en las tablas del método</h3>
+            <p class="hint" style="margin-top:4px">Las celdas resaltadas muestran dónde cayó tu evaluación en cada tabla.</p>
+            <div class="seg" id="tblSide" hidden style="margin-top:8px">
+              <label><input type="radio" name="tblSide" value="L"><span>Tablas del lado izquierdo</span></label>
+              <label><input type="radio" name="tblSide" value="R"><span>Tablas del lado derecho</span></label>
+            </div>
+            <p class="tcap">Tabla A <small data-out="t.A"></small></p>
+            <div class="tbl-wrap" id="wrapA"></div>
+            <p class="tcap">Tabla B <small data-out="t.B"></small></p>
+            <div class="tbl-wrap" id="wrapB"></div>
+            <p class="tcap">Tabla C <small data-out="t.C"></small></p>
+            <div class="tbl-wrap" id="wrapC"></div>
+          </div>
+
+          <div class="card">
+            <h3>Texto del reporte</h3>
+            <p class="hint" style="margin:4px 0 10px">Se genera con tus datos y puntuaciones. Puedes copiarlo o imprimir esta sección.</p>
+            <textarea class="report" id="reportText" readonly aria-label="Texto del reporte"></textarea>
+            <div class="rep-btns">
+              <button class="btn" id="copyBtn" type="button">Copiar texto del reporte</button>
+              <button class="btn ghost" id="printBtn" type="button">Imprimir o guardar PDF</button>
+              <span class="msg" id="copyMsg" role="status" aria-live="polite"></span>
+            </div>
+          </div>
+
+          <div class="card refs">
+            <p><b>Referencia.</b> McAtamney, L. y Corlett, E. N. (1993). RULA: a survey method for the investigation of work-related upper limb disorders. <i>Applied Ergonomics</i>, 24(2), 91-99. Hoja de trabajo original desarrollada por el Dr. Alan Hedge.</p>
+            <p>Tablas y criterios de puntuación contrastados con la guía de Ergonautas (Diego-Mas, J. A., Universidad Politécnica de Valencia), con la guía paso a paso de ErgoPlus y con la calculadora RULA de la asignatura.</p>
+            <p>Esta herramienta es un material didáctico y no reemplaza la hoja de trabajo oficial. Verifica las puntuaciones contra el método original cuando hagas una evaluación formal.</p>
+          </div>
+          <div class="nav-btns"><button class="btn ghost" data-go="3">Anterior</button><span></span></div>
+        </section>
+      </div>
+
+      <!-- Puntuación en vivo -->
+      <aside class="live" id="live" data-level="1" aria-label="Puntuación en vivo">
+        <h2>Puntuación en vivo</h2>
+        <p class="sub-l">Se calcula con las selecciones actuales.</p>
+        <div class="final" aria-live="polite">
+          <b class="big" data-out="live.score">1</b>
+          <div class="txt"><strong data-out="live.title"></strong><span data-out="live.desc"></span></div>
+        </div>
+        <div class="scale" id="scale"><i class="c1">1</i><i class="c1">2</i><i class="c2">3</i><i class="c2">4</i><i class="c3">5</i><i class="c3">6</i><i class="c4">7</i><span class="mk" id="mk"></span></div>
+        <p class="sub-l" style="margin:6px 0 0" data-out="live.side"></p>
+        <table class="mini">
+          <thead><tr><th>Grupo A</th><th class="col-L">Izq.</th><th class="col-R">Der.</th></tr></thead>
+          <tbody>
+            <tr><td>Brazo</td><td class="col-L" data-out="L.upper"></td><td class="col-R" data-out="R.upper"></td></tr>
+            <tr><td>Antebrazo</td><td class="col-L" data-out="L.lower"></td><td class="col-R" data-out="R.lower"></td></tr>
+            <tr><td>Muñeca</td><td class="col-L" data-out="L.wrist"></td><td class="col-R" data-out="R.wrist"></td></tr>
+            <tr><td>Giro de muñeca</td><td class="col-L" data-out="L.twist"></td><td class="col-R" data-out="R.twist"></td></tr>
+            <tr><td>Puntuación A</td><td class="col-L" data-out="L.A"></td><td class="col-R" data-out="R.A"></td></tr>
+            <tr class="tot"><td>Brazo y muñeca (C)</td><td class="col-L" data-out="L.C"></td><td class="col-R" data-out="R.C"></td></tr>
+            <tr class="grp"><td colspan="3">Grupo B (ambos lados)</td></tr>
+            <tr><td>Cuello</td><td colspan="2" data-out="B.neck"></td></tr>
+            <tr><td>Tronco</td><td colspan="2" data-out="B.trunk"></td></tr>
+            <tr><td>Piernas</td><td colspan="2" data-out="B.legs"></td></tr>
+            <tr><td>Puntuación B</td><td colspan="2" data-out="B.B"></td></tr>
+            <tr class="tot"><td>Cuello, tronco y piernas (D)</td><td colspan="2" data-out="B.D"></td></tr>
+            <tr class="grp"><td colspan="3">Puntuación final RULA</td></tr>
+            <tr class="tot"><td>Tabla C</td><td class="col-L" data-out="L.final"></td><td class="col-R" data-out="R.final"></td></tr>
+          </tbody>
+        </table>
+        <div class="btns">
+          <button class="btn ghost" id="recalc" type="button">Recalcular</button>
+          <button class="btn ghost" id="toSummary" type="button">Ver resumen</button>
+          <button class="btn ghost" id="reset" type="button">Reiniciar</button>
+        </div>
+      </aside>
+    </div>
+  </div>
+</main>
+
+<footer class="site">
+  <p>Material didáctico de la asignatura Taller de Ergonomía e Ingeniería de Métodos. Basado en la estructura de la hoja de trabajo RULA y en la calculadora de la asignatura; no es una herramienta oficial del método.</p>
+</footer>
+
+<div class="mbar" id="mbar" data-level="1">
+  <b class="big" data-out="live.score">1</b>
+  <div class="t"><strong data-out="live.title"></strong><span data-out="live.side"></span></div>
+  <button class="btn ghost" id="mbarBtn" type="button">Detalle</button>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* ---------- Tablas oficiales del método ---------- */
+// Tabla A [brazo-1][antebrazo-1][(muñeca-1)*2 + (giro-1)]
+const TABLE_A=[
+ [[1,2,2,2,2,3,3,3],[2,2,2,2,3,3,3,3],[2,3,3,3,3,3,4,4]],
+ [[2,3,3,3,3,4,4,4],[3,3,3,3,3,4,4,4],[3,4,4,4,4,4,5,5]],
+ [[3,3,4,4,4,4,5,5],[3,4,4,4,4,4,5,5],[4,4,4,4,4,5,5,5]],
+ [[4,4,4,4,4,5,5,5],[4,4,4,4,4,5,5,5],[4,4,4,5,5,5,6,6]],
+ [[5,5,5,5,5,6,6,7],[5,6,6,6,6,7,7,7],[6,6,6,7,7,7,7,8]],
+ [[7,7,7,7,7,8,8,9],[8,8,8,8,8,9,9,9],[9,9,9,9,9,9,9,9]]
+];
+// Tabla B [cuello-1][(tronco-1)*2 + (piernas-1)]
+const TABLE_B=[
+ [1,3,2,3,3,4,5,5,6,6,7,7],
+ [2,3,2,3,4,5,5,5,6,7,7,7],
+ [3,3,3,4,4,5,5,6,6,7,7,7],
+ [5,5,5,6,6,7,7,7,7,7,8,8],
+ [7,7,7,7,7,8,8,8,8,8,8,8],
+ [8,8,8,8,8,8,8,9,9,9,9,9]
+];
+// Tabla C [C-1 (máx 8)][D-1 (máx 7)]
+const TABLE_C=[
+ [1,2,3,3,4,5,5],
+ [2,2,3,4,4,5,5],
+ [3,3,3,4,4,5,6],
+ [3,3,3,4,5,6,6],
+ [4,4,4,5,6,7,7],
+ [4,4,5,6,6,7,7],
+ [5,5,6,6,7,7,7],
+ [5,5,6,7,7,7,7]
+];
+const FORCE_PTS={f0:0,f1:1,f2:2,f3:2,f4:3,f5:3};
+const FORCE_TXT={
+ f0:'Carga menor de 2 kg, intermitente',
+ f1:'Carga de 2 a 10 kg, intermitente',
+ f2:'Carga de 2 a 10 kg, estática o repetitiva',
+ f3:'Carga mayor de 10 kg, intermitente',
+ f4:'Carga mayor de 10 kg, estática o repetitiva',
+ f5:'Golpes o fuerzas bruscas o repentinas'
+};
+const LEVELS={
+ 1:{t:'Nivel de actuación 1',d:'Riesgo aceptable. No se requieren cambios si la postura no se mantiene ni se repite durante periodos largos.',range:'1 o 2'},
+ 2:{t:'Nivel de actuación 2',d:'Pueden requerirse cambios en la tarea. Conviene profundizar en el estudio.',range:'3 o 4'},
+ 3:{t:'Nivel de actuación 3',d:'Se requiere el rediseño de la tarea. Investiga y cambia pronto.',range:'5 o 6'},
+ 4:{t:'Nivel de actuación 4',d:'Se requieren cambios urgentes en la tarea. Investiga e implementa cambios ya.',range:'7'}
+};
+const levelOf=s=>s<=2?1:s<=4?2:s<=6?3:4;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const SIDE_NAME={L:'izquierdo',R:'derecho'};
+
+/* ---------- Diagramas de ángulos ---------- */
+const rad=d=>d*Math.PI/180;
+const PT=(cx,cy,r,d)=>[+(cx+r*Math.cos(rad(d))).toFixed(1),+(cy+r*Math.sin(rad(d))).toFixed(1)];
+function gauge(o){
+  const {cx,cy,zero,sign=1,R=34,sectors=[],seg=0,segLen=40,refLen=50,dash=false,fixed=[],head=false}=o;
+  let s='<svg class="gauge" viewBox="0 0 120 100" aria-hidden="true" focusable="false">';
+  sectors.forEach(([a,b])=>{
+    const s1=zero+sign*a,s2=zero+sign*b,[x1,y1]=PT(cx,cy,R,s1),[x2,y2]=PT(cx,cy,R,s2);
+    s+=`<path class="g-sec" d="M${cx} ${cy}L${x1} ${y1}A${R} ${R} 0 ${Math.abs(b-a)>180?1:0} ${s2>s1?1:0} ${x2} ${y2}Z"/>`;
+  });
+  const [rx,ry]=PT(cx,cy,refLen,zero);
+  s+=`<line class="g-ref${dash?' dash':''}" x1="${cx}" y1="${cy}" x2="${rx}" y2="${ry}"/>`;
+  fixed.forEach(f=>{const [x,y]=PT(cx,cy,f.len,f.deg);s+=`<line class="g-fix" x1="${cx}" y1="${cy}" x2="${x}" y2="${y}"/>`;});
+  const sd=zero+sign*seg,[sx,sy]=PT(cx,cy,segLen,sd);
+  s+=`<line class="g-seg" x1="${cx}" y1="${cy}" x2="${sx}" y2="${sy}"/>`;
+  if(head){const [hx,hy]=PT(cx,cy,segLen+6,sd);s+=`<circle class="g-head" cx="${hx}" cy="${hy}" r="7"/>`;}
+  else s+=`<circle class="g-dot" cx="${sx}" cy="${sy}" r="3.6"/>`;
+  s+=`<circle class="g-joint" cx="${cx}" cy="${cy}" r="3.6"/></svg>`;
+  return s;
+}
+const G={
+ upper:(sectors,seg)=>gauge({cx:50,cy:44,zero:90,sign:-1,R:34,refLen:50,segLen:40,sectors,seg}),
+ lower:(sectors,seg)=>gauge({cx:44,cy:34,zero:90,sign:-1,R:34,refLen:56,dash:true,fixed:[{deg:-90,len:30}],segLen:42,sectors,seg}),
+ wrist:(sectors,seg)=>gauge({cx:66,cy:50,zero:0,sign:-1,R:34,refLen:48,dash:true,fixed:[{deg:180,len:54}],segLen:38,sectors,seg}),
+ neck:(sectors,seg)=>gauge({cx:50,cy:66,zero:-90,sign:1,R:38,refLen:56,dash:true,fixed:[{deg:90,len:28}],segLen:34,head:true,sectors,seg}),
+ trunk:(sectors,seg)=>gauge({cx:46,cy:62,zero:-90,sign:1,R:38,refLen:52,dash:true,fixed:[{deg:90,len:30}],segLen:38,head:true,sectors,seg})
+};
+const LEGS_OK='<svg class="gauge" viewBox="0 0 120 100" aria-hidden="true"><line class="g-ground" x1="14" y1="92" x2="106" y2="92"/><circle class="g-head" cx="60" cy="14" r="8"/><path class="g-seg" d="M60 22V56M60 56L46 92M60 56L74 92M60 32L46 48M60 32L74 48"/></svg>';
+const LEGS_BAD='<svg class="gauge" viewBox="0 0 120 100" aria-hidden="true"><line class="g-ground" x1="14" y1="92" x2="106" y2="92"/><circle class="g-head" cx="56" cy="14" r="8"/><path class="g-seg" d="M56 22V56M56 56L48 92M56 56L82 68L70 84M56 32L42 48M56 32L70 48"/></svg>';
+
+/* ---------- Opciones ---------- */
+const OPT={
+ upper:[
+  {v:1,pt:'+1',t:'Casi neutro',s:'De 20° de extensión a 20° de flexión',g:G.upper([[-20,20]],0)},
+  {v:2,pt:'+2',t:'Flexión leve',s:'Extensión mayor de 20° o flexión de 20° a 45°',g:G.upper([[-60,-20],[20,45]],32)},
+  {v:3,pt:'+3',t:'Flexión moderada',s:'Flexión de 45° a 90°',g:G.upper([[45,90]],67)},
+  {v:4,pt:'+4',t:'Flexión alta',s:'Flexión mayor de 90°',g:G.upper([[90,170]],120)}
+ ],
+ lower:[
+  {v:1,pt:'+1',t:'Flexión de 60° a 100°',s:'Ángulo del codo en rango medio',g:G.lower([[60,100]],80)},
+  {v:2,pt:'+2',t:'Fuera de 60° a 100°',s:'Flexión menor de 60° o mayor de 100°',g:G.lower([[0,60],[100,150]],30)}
+ ],
+ wrist:[
+  {v:1,pt:'+1',t:'Posición neutra',s:'0° respecto al antebrazo',g:G.wrist([],0)},
+  {v:2,pt:'+2',t:'Desviación leve',s:'Flexión o extensión de 0° a 15°',g:G.wrist([[-15,15]],9)},
+  {v:3,pt:'+3',t:'Desviación marcada',s:'Flexión o extensión mayor de 15°',g:G.wrist([[15,55],[-55,-15]],35)}
+ ],
+ twist:[
+  {v:1,pt:'+1',t:'Giro medio',s:'Pronación o supinación en el rango medio, o sin giro',row:1},
+  {v:2,pt:'+2',t:'Giro extremo',s:'Pronación o supinación en el extremo del rango o cerca de él',row:1}
+ ],
+ neck:[
+  {v:1,pt:'+1',t:'Flexión de 0° a 10°',s:'Cabeza casi erguida',g:G.neck([[0,10]],5)},
+  {v:2,pt:'+2',t:'Flexión de 10° a 20°',s:'Inclinación leve hacia adelante',g:G.neck([[10,20]],15)},
+  {v:3,pt:'+3',t:'Flexión mayor de 20°',s:'Inclinación marcada hacia adelante',g:G.neck([[20,60]],40)},
+  {v:4,pt:'+4',t:'Extensión',s:'Cabeza inclinada hacia atrás, en cualquier grado',g:G.neck([[-40,0]],-24)}
+ ],
+ trunk:[
+  {v:1,pt:'+1',t:'Erguido o bien apoyado',s:'De pie sin flexión, o sentado bien apoyado con ángulo tronco-piernas mayor de 90°',g:G.trunk([],0)},
+  {v:2,pt:'+2',t:'Flexión de 0° a 20°',s:'Inclinación leve hacia adelante',g:G.trunk([[0,20]],10)},
+  {v:3,pt:'+3',t:'Flexión de 20° a 60°',s:'Inclinación moderada hacia adelante',g:G.trunk([[20,60]],40)},
+  {v:4,pt:'+4',t:'Flexión mayor de 60°',s:'Inclinación marcada hacia adelante',g:G.trunk([[60,110]],85)}
+ ],
+ legs:[
+  {v:1,pt:'+1',t:'Apoyadas y equilibradas',s:'Sentado con piernas y pies bien apoyados, o de pie con el peso simétrico y espacio para cambiar de posición',g:LEGS_OK},
+  {v:2,pt:'+2',t:'Sin apoyo o desequilibradas',s:'Pies sin apoyo o peso no distribuido de forma simétrica',g:LEGS_BAD}
+ ],
+ muscle:[
+  {v:0,pt:'0',t:'Actividad dinámica u ocasional',s:'La postura no es estática ni se repite 4 o más veces por minuto',row:1},
+  {v:1,pt:'+1',t:'Estática o repetitiva',s:'Postura mantenida más de 1 minuto seguido, o acción repetida 4 o más veces por minuto',row:1}
+ ],
+ force:[
+  {v:'f0',pt:'0',t:FORCE_TXT.f0,row:1},
+  {v:'f1',pt:'+1',t:FORCE_TXT.f1,row:1},
+  {v:'f2',pt:'+2',t:FORCE_TXT.f2,row:1},
+  {v:'f3',pt:'+2',t:FORCE_TXT.f3,row:1},
+  {v:'f4',pt:'+3',t:FORCE_TXT.f4,row:1},
+  {v:'f5',pt:'+3',t:FORCE_TXT.f5,row:1}
+ ]
+};
+const BASE_TXT={
+ upper:{1:'casi neutro',2:'flexión leve',3:'flexión moderada',4:'flexión alta'},
+ lower:{1:'flexión de 60° a 100°',2:'fuera de 60° a 100°'},
+ wrist:{1:'neutra',2:'desviación de 0° a 15°',3:'desviación mayor de 15°'},
+ twist:{1:'giro medio',2:'giro extremo'},
+ neck:{1:'flexión de 0° a 10°',2:'flexión de 10° a 20°',3:'flexión mayor de 20°',4:'extensión'},
+ trunk:{1:'erguido o bien apoyado',2:'flexión de 0° a 20°',3:'flexión de 20° a 60°',4:'flexión mayor de 60°'},
+ legs:{1:'apoyadas y equilibradas',2:'sin apoyo o desequilibradas'}
+};
+
+/* ---------- Plantillas ---------- */
+function radios(side,field,opts,cls){
+  return `<div class="opts ${cls||''}" role="radiogroup">`+opts.map(o=>`<label class="opt"><input type="radio" name="${side}_${field}" value="${o.v}" data-side="${side}" data-field="${field}"><span class="opt-body">${o.g||''}<span class="opt-head"><b class="pt">${o.pt}</b><span class="opt-t">${o.t}</span></span>${o.s?`<span class="opt-s">${o.s}</span>`:''}</span></label>`).join('')+'</div>';
+}
+function checks(side,items){
+  return '<div class="chks">'+items.map(i=>`<label class="chk"><input type="checkbox" data-side="${side}" data-field="${i.f}"><span class="chk-body"><b class="pt${i.neg?' neg':''}">${i.pt}</b><span>${i.t}</span></span></label>`).join('')+'</div>';
+}
+function step(n,title,hint,body,outKey){
+  return `<article class="card step"><header class="step-h"><div><span class="step-n">Paso ${n}</span><h3>${title}</h3></div>${outKey?`<div class="score-pill">Puntuación <b data-out="${outKey}">1</b></div>`:''}</header>${hint?`<p class="hint">${hint}</p>`:''}${body}</article>`;
+}
+function calc(n,title,note,key,fKey){
+  return `<div class="calc"><div><span class="step-n">Paso ${n} (automático)</span><strong>${title}</strong><small>${note}</small>${fKey?`<small class="formula" data-out="${fKey}"></small>`:''}</div><b class="big" data-out="${key}">1</b></div>`;
+}
+function panelA(side){
+  const s=side;
+  return `<div class="side-panel" data-side="${s}">
+  <h3 class="side-h">Lado ${SIDE_NAME[s]}</h3>`+
+  step(1,'Posición del brazo','Mide el ángulo entre el eje del brazo y el eje del tronco. Elige la posición y marca los ajustes que apliquen.',
+    radios(s,'upper',OPT.upper,'')+'<h4 class="sub">Ajustes del brazo</h4>'+checks(s,[
+      {f:'raised',pt:'+1',t:'Hombro elevado o brazo rotado'},
+      {f:'abd',pt:'+1',t:'Brazo abducido (separado del tronco)'},
+      {f:'support',pt:'−1',neg:1,t:'Brazo apoyado o la persona se inclina con ayuda de la gravedad'}
+    ]),s+'.upper')+
+  step(2,'Posición del antebrazo','Ángulo de flexión del codo, entre el eje del antebrazo y el del brazo.',
+    radios(s,'lower',OPT.lower,'two')+'<h4 class="sub">Ajuste del antebrazo</h4>'+checks(s,[
+      {f:'cross',pt:'+1',t:'Trabaja cruzando la línea media o a un lado del cuerpo'}
+    ]),s+'.lower')+
+  step(3,'Posición de la muñeca','Ángulo de flexión o extensión de la muñeca respecto a la posición neutra.',
+    radios(s,'wrist',OPT.wrist,'')+'<h4 class="sub">Ajuste de la muñeca</h4>'+checks(s,[
+      {f:'dev',pt:'+1',t:'Desviación radial o cubital (muñeca torcida hacia un lado)'}
+    ]),s+'.wrist')+
+  step(4,'Giro de la muñeca','Pronación o supinación del antebrazo. Este valor no se suma a la muñeca: entra directamente en la Tabla A.',
+    radios(s,'twist',OPT.twist,'two'),s+'.twist')+
+  calc(5,'Puntuación postural A','Se busca en la Tabla A con brazo, antebrazo, muñeca y giro.',s+'.A')+
+  step(6,'Uso muscular','Añade un punto si la postura es estática o repetitiva.',radios(s,'muscle',OPT.muscle,'two'),s+'.muscle')+
+  step(7,'Fuerza o carga','Carga o fuerza que se ejerce mientras se mantiene la postura.',radios(s,'force',OPT.force,'list'),s+'.force')+
+  calc(8,'Puntuación de brazo y muñeca (C)','Puntuación A + uso muscular + fuerza o carga.',s+'.C',s+'.Cf')+
+  '</div>';
+}
+function panelB(){
+  const s='B';
+  return step(9,'Posición del cuello','Ángulo entre el eje de la cabeza y el eje del tronco. Considera neutro el cuello con el tronco erguido y la vista al frente, a la altura de los ojos.',
+    radios(s,'neck',OPT.neck,'')+'<h4 class="sub">Ajustes del cuello</h4>'+checks(s,[
+      {f:'nTwist',pt:'+1',t:'Cuello rotado'},
+      {f:'nSide',pt:'+1',t:'Cuello con inclinación lateral'}
+    ]),'B.neck')+
+  step(10,'Posición del tronco','Ángulo entre el eje del tronco y la vertical.',
+    radios(s,'trunk',OPT.trunk,'')+'<h4 class="sub">Ajustes del tronco</h4>'+checks(s,[
+      {f:'tTwist',pt:'+1',t:'Tronco rotado'},
+      {f:'tSide',pt:'+1',t:'Tronco con inclinación lateral'}
+    ]),'B.trunk')+
+  step(11,'Piernas','Evalúa el apoyo de piernas y pies y cómo se distribuye el peso.',radios(s,'legs',OPT.legs,'two'),'B.legs')+
+  calc(12,'Puntuación postural B','Se busca en la Tabla B con cuello, tronco y piernas.','B.B')+
+  step(13,'Uso muscular','Añade un punto si la postura es estática o repetitiva.',radios(s,'muscle',OPT.muscle,'two'),'B.muscle')+
+  step(14,'Fuerza o carga','Carga o fuerza que se ejerce mientras se mantiene la postura.',radios(s,'force',OPT.force,'list'),'B.force')+
+  calc(15,'Puntuación de cuello, tronco y piernas (D)','Puntuación B + uso muscular + fuerza o carga.','B.D','B.Df');
+}
+
+/* ---------- Tablas de consulta ---------- */
+function buildTableA(){
+  let h='<table class="tbl" id="tA"><thead><tr><th rowspan="2" colspan="2">Brazo · antebrazo</th>';
+  for(let w=1;w<=4;w++)h+=`<th colspan="2" data-hw="${w}">Muñeca ${w}</th>`;
+  h+='</tr><tr>';
+  for(let i=0;i<8;i++)h+=`<th data-hc="${i}">Giro ${i%2+1}</th>`;
+  h+='</tr></thead><tbody>';
+  for(let a=1;a<=6;a++)for(let f=1;f<=3;f++){
+    h+='<tr>'+(f===1?`<th rowspan="3" data-arm="${a}">${a}</th>`:'')+`<th data-hr="${a}-${f}">${f}</th>`;
+    TABLE_A[a-1][f-1].forEach((v,i)=>{h+=`<td data-k="${a}-${f}-${i}">${v}</td>`;});
+    h+='</tr>';
+  }
+  return h+'</tbody></table>';
+}
+function buildTableB(){
+  let h='<table class="tbl" id="tB"><thead><tr><th rowspan="2">Cuello</th>';
+  for(let t=1;t<=6;t++)h+=`<th colspan="2" data-hw="${t}">Tronco ${t}</th>`;
+  h+='</tr><tr>';
+  for(let i=0;i<12;i++)h+=`<th data-hc="${i}">Piernas ${i%2+1}</th>`;
+  h+='</tr></thead><tbody>';
+  for(let n=1;n<=6;n++){
+    h+=`<tr><th data-hr="${n}">${n}</th>`;
+    TABLE_B[n-1].forEach((v,i)=>{h+=`<td data-k="${n}-${i}">${v}</td>`;});
+    h+='</tr>';
+  }
+  return h+'</tbody></table>';
+}
+function buildTableC(){
+  let h='<table class="tbl" id="tC"><thead><tr><th>C \\ D</th>';
+  for(let d=1;d<=7;d++)h+=`<th data-hc="${d}">${d===7?'7 o más':d}</th>`;
+  h+='</tr></thead><tbody>';
+  for(let c=1;c<=8;c++){
+    h+=`<tr><th data-hr="${c}">${c===8?'8 o más':c}</th>`;
+    TABLE_C[c-1].forEach((v,i)=>{h+=`<td class="c${levelOf(v)}" data-k="${c}-${i+1}">${v}</td>`;});
+    h+='</tr>';
+  }
+  return h+'</tbody></table>';
+}
+function mark(tbl,o){
+  $$('.hit,.hit-h',tbl).forEach(x=>x.classList.remove('hit','hit-h'));
+  const c=tbl.querySelector(`td[data-k="${o.k}"]`); if(c)c.classList.add('hit');
+  [['data-hr',o.hr],['data-hc',o.hc],['data-hw',o.hw],['data-arm',o.arm]].forEach(([a,v])=>{
+    if(v!==undefined){const e=tbl.querySelector(`th[${a}="${v}"]`); if(e)e.classList.add('hit-h');}
+  });
+}
+
+/* ---------- Estado ---------- */
+const today=()=>new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,10);
+const sideDef=()=>({upper:1,raised:false,abd:false,support:false,lower:1,cross:false,wrist:1,dev:false,twist:1,muscle:0,force:'f0'});
+const bDef=()=>({neck:1,nTwist:false,nSide:false,trunk:1,tTwist:false,tSide:false,legs:1,muscle:0,force:'f0'});
+const metaDef=()=>({evaluator:'',team:'',date:today(),company:'',dept:'',supervisor:'',task:'',desc:'',media:'',side:'both'});
+let state={meta:metaDef(),L:sideDef(),R:sideDef(),B:bDef(),tab:'R',pane:1,viewSide:null};
+
+/* ---------- Cálculo ---------- */
+function calcSide(s){
+  const upper=clamp(s.upper+(s.raised?1:0)+(s.abd?1:0)-(s.support?1:0),1,6);
+  const lower=clamp(s.lower+(s.cross?1:0),1,3);
+  const wrist=clamp(s.wrist+(s.dev?1:0),1,4);
+  const twist=s.twist;
+  const idx=(wrist-1)*2+(twist-1);
+  const A=TABLE_A[upper-1][lower-1][idx];
+  const force=FORCE_PTS[s.force];
+  return {upper,lower,wrist,twist,idx,A,muscle:s.muscle,force,C:A+s.muscle+force};
+}
+function calcB(b){
+  const neck=clamp(b.neck+(b.nTwist?1:0)+(b.nSide?1:0),1,6);
+  const trunk=clamp(b.trunk+(b.tTwist?1:0)+(b.tSide?1:0),1,6);
+  const legs=b.legs;
+  const idx=(trunk-1)*2+(legs-1);
+  const B=TABLE_B[neck-1][idx];
+  const force=FORCE_PTS[b.force];
+  return {neck,trunk,legs,idx,B,muscle:b.muscle,force,D:B+b.muscle+force};
+}
+const finalScore=(C,D)=>TABLE_C[Math.min(C,8)-1][Math.min(D,7)-1];
+const visibleSides=()=>state.meta.side==='both'?['L','R']:[state.meta.side];
+const fmtSign=n=>n>0?'+'+n:String(n);
+
+function compute(){
+  const rs={L:calcSide(state.L),R:calcSide(state.R)};
+  const rb=calcB(state.B);
+  const fin={L:finalScore(rs.L.C,rb.D),R:finalScore(rs.R.C,rb.D)};
+  const vis=visibleSides();
+  const max=Math.max(...vis.map(k=>fin[k]));
+  const crit=vis.filter(k=>fin[k]===max);
+  return {rs,rb,fin,vis,max,crit};
+}
+
+/* ---------- Render ---------- */
+let R_=null;
+function render(){
+  const r=R_=compute();
+  const out={};
+  ['L','R'].forEach(k=>{
+    const x=r.rs[k];
+    out[k+'.upper']=x.upper;out[k+'.lower']=x.lower;out[k+'.wrist']=x.wrist;out[k+'.twist']=x.twist;
+    out[k+'.A']=x.A;out[k+'.muscle']=fmtSign(x.muscle);out[k+'.force']=fmtSign(x.force);out[k+'.C']=x.C;
+    out[k+'.Cf']=`${x.A} + ${x.muscle} + ${x.force} = ${x.C}`;
+    out[k+'.final']=r.fin[k];
+    const lv=levelOf(r.fin[k]);
+    out[k+'.lvlT']=LEVELS[lv].t;out[k+'.lvlD']=LEVELS[lv].d;
+    out[k+'.risk']=`Índice de riesgo de referencia (puntuación ÷ 3): ${(r.fin[k]/3).toFixed(2)}. Meta: 1,00 o menos.`;
+    const card=$(`.res-card[data-side="${k}"]`); if(card)card.dataset.level=lv;
+  });
+  const b=r.rb;
+  out['B.neck']=b.neck;out['B.trunk']=b.trunk;out['B.legs']=b.legs;out['B.B']=b.B;
+  out['B.muscle']=fmtSign(b.muscle);out['B.force']=fmtSign(b.force);out['B.D']=b.D;out['B.Df']=`${b.B} + ${b.muscle} + ${b.force} = ${b.D}`;
+  const lvl=levelOf(r.max);
+  out['live.score']=r.max;out['live.title']=LEVELS[lvl].t;out['live.desc']=LEVELS[lvl].d;
+  out['live.side']=r.vis.length===1?`Lado ${SIDE_NAME[r.vis[0]]}`:(r.crit.length===2?'Ambos lados con la misma puntuación':`Lado más exigente: ${SIDE_NAME[r.crit[0]]}`);
+  // tablas
+  const vs=r.vis.length===1?r.vis[0]:(state.viewSide&&r.vis.includes(state.viewSide)?state.viewSide:r.crit[0]);
+  const x=r.rs[vs];
+  mark($('#tA'),{k:`${x.upper}-${x.lower}-${x.idx}`,arm:x.upper,hr:`${x.upper}-${x.lower}`,hc:x.idx,hw:x.wrist});
+  mark($('#tB'),{k:`${b.neck}-${b.idx}`,hr:b.neck,hw:b.trunk,hc:b.idx});
+  const cr=Math.min(x.C,8),dc=Math.min(b.D,7);
+  mark($('#tC'),{k:`${cr}-${dc}`,hr:cr,hc:dc});
+  out['t.A']=`(lado ${SIDE_NAME[vs]}) brazo ${x.upper}, antebrazo ${x.lower}, muñeca ${x.wrist}, giro ${x.twist}: resultado ${x.A}`;
+  out['t.B']=`cuello ${b.neck}, tronco ${b.trunk}, piernas ${b.legs}: resultado ${b.B}`;
+  out['t.C']=`(lado ${SIDE_NAME[vs]}) C = ${x.C}, D = ${b.D}: puntuación final ${r.fin[vs]}`;
+  $$('[data-out]').forEach(el=>{const v=out[el.dataset.out]; if(v!==undefined)el.textContent=v;});
+  // estilos por nivel
+  ['live','mbar'].forEach(id=>{const e=document.getElementById(id); if(e)e.dataset.level=lvl;});
+  document.body.dataset.level=lvl;
+  document.body.dataset.sides=state.meta.side;
+  $('#mk').style.left=((r.max-.5)/7*100)+'%';
+  $$('#levels .lv').forEach(e=>e.classList.toggle('now',+e.dataset.level===lvl));
+  const tsr=$('#tblSide'); tsr.hidden=r.vis.length===1;
+  $$('input[name="tblSide"]',tsr).forEach(i=>{i.checked=i.value===vs;});
+  updateSidePanels();
+  $('#reportText').value=buildReport(r,vs);
+}
+function updateSidePanels(){
+  const both=state.meta.side==='both';
+  const vis=both?state.tab:state.meta.side;
+  $$('.side-panel').forEach(p=>{p.hidden=p.dataset.side!==vis;});
+  $('#sideTabs').hidden=false;
+  $$('#sideTabs [data-tab]').forEach(b=>{b.hidden=!both;b.classList.toggle('on',b.dataset.tab===state.tab);b.setAttribute('aria-selected',b.dataset.tab===state.tab);});
+  const cp=$('#copySide');
+  cp.hidden=!both;
+  if(both){const other=state.tab==='L'?'R':'L';cp.textContent=`Copiar valores del lado ${SIDE_NAME[other]}`;}
+  $('#sideTabs').style.display=both?'':'none';
+}
+
+/* ---------- Reporte ---------- */
+function adjText(s,list){const a=list.filter(([f])=>s[f]).map(([,t])=>t);return a.length?' ('+a.join('; ')+')':'';}
+function buildReport(r,vs){
+  const m=state.meta,L=[];
+  const v=x=>x&&String(x).trim()?String(x).trim():'—';
+  L.push('Evaluación postural con el método RULA');
+  L.push('Asignatura: Taller de Ergonomía e Ingeniería de Métodos');
+  L.push('');
+  L.push(`Evaluador o evaluadora: ${v(m.evaluator)}`);
+  L.push(`Grupo o equipo: ${v(m.team)}`);
+  L.push(`Fecha: ${v(m.date)}`);
+  L.push(`Empresa: ${v(m.company)}   Departamento: ${v(m.dept)}   Supervisor: ${v(m.supervisor)}`);
+  L.push(`Tarea: ${v(m.task)}`);
+  L.push(`Descripción: ${v(m.desc)}`);
+  L.push(`Referencia de foto o video: ${v(m.media)}`);
+  L.push(`Lados evaluados: ${r.vis.length===2?'izquierdo y derecho':SIDE_NAME[r.vis[0]]}`);
+  r.vis.forEach(k=>{
+    const s=state[k],x=r.rs[k];
+    L.push('');
+    L.push(`Grupo A, lado ${SIDE_NAME[k]}`);
+    L.push(`- Brazo: ${x.upper}, base ${s.upper} (${BASE_TXT.upper[s.upper]})${adjText(s,[['raised','hombro elevado o brazo rotado +1'],['abd','abducido +1'],['support','apoyo −1']])}`);
+    L.push(`- Antebrazo: ${x.lower}, base ${s.lower} (${BASE_TXT.lower[s.lower]})${adjText(s,[['cross','cruza la línea media o trabaja a un lado +1']])}`);
+    L.push(`- Muñeca: ${x.wrist}, base ${s.wrist} (${BASE_TXT.wrist[s.wrist]})${adjText(s,[['dev','desviación radial o cubital +1']])}`);
+    L.push(`- Giro de muñeca: ${x.twist} (${BASE_TXT.twist[x.twist]})`);
+    L.push(`- Puntuación postural A (Tabla A): ${x.A}`);
+    L.push(`- Uso muscular: ${fmtSign(x.muscle)}`);
+    L.push(`- Fuerza o carga: ${fmtSign(x.force)} (${FORCE_TXT[s.force].toLowerCase()})`);
+    L.push(`- Puntuación de brazo y muñeca (C): ${x.A} + ${x.muscle} + ${x.force} = ${x.C}`);
+  });
+  const b=state.B,y=r.rb;
+  L.push('');
+  L.push('Grupo B (ambos lados)');
+  L.push(`- Cuello: ${y.neck}, base ${b.neck} (${BASE_TXT.neck[b.neck]})${adjText(b,[['nTwist','rotado +1'],['nSide','inclinación lateral +1']])}`);
+  L.push(`- Tronco: ${y.trunk}, base ${b.trunk} (${BASE_TXT.trunk[b.trunk]})${adjText(b,[['tTwist','rotado +1'],['tSide','inclinación lateral +1']])}`);
+  L.push(`- Piernas: ${y.legs} (${BASE_TXT.legs[y.legs]})`);
+  L.push(`- Puntuación postural B (Tabla B): ${y.B}`);
+  L.push(`- Uso muscular: ${fmtSign(y.muscle)}`);
+  L.push(`- Fuerza o carga: ${fmtSign(y.force)} (${FORCE_TXT[b.force].toLowerCase()})`);
+  L.push(`- Puntuación de cuello, tronco y piernas (D): ${y.B} + ${y.muscle} + ${y.force} = ${y.D}`);
+  L.push('');
+  L.push('Resultado');
+  r.vis.forEach(k=>{
+    const lv=levelOf(r.fin[k]);
+    L.push(`- Lado ${SIDE_NAME[k]}: puntuación final ${r.fin[k]} (Tabla C, C = ${r.rs[k].C}, D = ${y.D}). ${LEVELS[lv].t}. ${LEVELS[lv].d}`);
+  });
+  if(r.vis.length===2)L.push(r.crit.length===2?'- Ambos lados obtienen la misma puntuación.':`- Lado más exigente: ${SIDE_NAME[r.crit[0]]}.`);
+  L.push(`- Índice de riesgo de referencia (puntuación final ÷ 3): ${(r.max/3).toFixed(2)}. Meta: 1,00 o menos.`);
+  L.push('');
+  L.push('Referencia: McAtamney y Corlett (1993), Applied Ergonomics, 24(2), 91-99.');
+  return L.join('\n');
+}
+
+/* ---------- Interacción ---------- */
+function syncInputs(){
+  $$('input[data-field]').forEach(i=>{
+    const tgt=i.dataset.side==='B'?state.B:state[i.dataset.side],val=tgt[i.dataset.field];
+    i.checked=i.type==='checkbox'?!!val:String(val)===i.value;
+  });
+  $$('[data-meta]').forEach(i=>{
+    const val=state.meta[i.dataset.meta];
+    if(i.type==='radio')i.checked=i.value===val;else i.value=val;
+  });
+}
+document.addEventListener('change',e=>{
+  const t=e.target;
+  if(t.name==='tblSide'){state.viewSide=t.value;render();return;}
+  if(t.dataset.meta==='side'){state.meta.side=t.value;render();return;}
+  if(t.dataset.field){
+    const tgt=t.dataset.side==='B'?state.B:state[t.dataset.side];
+    tgt[t.dataset.field]=t.type==='checkbox'?t.checked:(t.dataset.field==='force'?t.value:Number(t.value));
+    render();
+  }
+});
+document.addEventListener('input',e=>{
+  const t=e.target;
+  if(t.dataset.meta&&t.type!=='radio'){state.meta[t.dataset.meta]=t.value;render();}
+});
+const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function showPane(n,noScroll){
+  state.pane=n;
+  $$('.pane').forEach(p=>p.classList.toggle('active',+p.dataset.pane===n));
+  $$('#stepper button').forEach(b=>{const on=+b.dataset.pane===n;b.classList.toggle('on',on);b.setAttribute('aria-selected',on);b.tabIndex=on?0:-1;});
+  if(!noScroll)$('#tool').scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
+}
+$$('#stepper button').forEach(b=>{
+  b.addEventListener('click',()=>showPane(+b.dataset.pane));
+  b.addEventListener('keydown',e=>{
+    if(e.key!=='ArrowRight'&&e.key!=='ArrowLeft')return;
+    const n=clamp(state.pane+(e.key==='ArrowRight'?1:-1),1,4);showPane(n,true);
+    $(`#stepper button[data-pane="${n}"]`).focus();
+  });
+});
+document.addEventListener('click',e=>{
+  const go=e.target.closest('[data-go]'); if(go){showPane(+go.dataset.go);return;}
+  const tab=e.target.closest('[data-tab]'); if(tab){state.tab=tab.dataset.tab;render();return;}
+});
+$('#copySide').addEventListener('click',()=>{
+  const other=state.tab==='L'?'R':'L';
+  state[state.tab]=Object.assign({},state[other]);
+  syncInputs();render();
+});
+$('#recalc').addEventListener('click',()=>{render();const f=$('.final');f.animate&&!reduce&&f.animate([{transform:'scale(1)'},{transform:'scale(1.03)'},{transform:'scale(1)'}],{duration:260});});
+$('#toSummary').addEventListener('click',()=>showPane(4));
+$('#mbarBtn').addEventListener('click',()=>{$('#live').scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});});
+let resetTimer=null;
+$('#reset').addEventListener('click',function(){
+  const b=this;
+  if(b.dataset.armed){
+    clearTimeout(resetTimer);delete b.dataset.armed;b.textContent='Reiniciar';b.classList.remove('danger');
+    state={meta:metaDef(),L:sideDef(),R:sideDef(),B:bDef(),tab:'R',pane:state.pane,viewSide:null};
+    syncInputs();render();$('#copyMsg').textContent='';
+  }else{
+    b.dataset.armed='1';b.textContent='Confirmar reinicio';b.classList.add('danger');
+    resetTimer=setTimeout(()=>{delete b.dataset.armed;b.textContent='Reiniciar';b.classList.remove('danger');},3500);
+  }
+});
+$('#copyBtn').addEventListener('click',async()=>{
+  const ta=$('#reportText'),msg=$('#copyMsg');
+  const ok=()=>{msg.textContent='Texto copiado';setTimeout(()=>{msg.textContent='';},2500);};
+  const fail=()=>{msg.textContent='No se pudo copiar. Selecciona el texto y cópialo manualmente.';};
+  try{await navigator.clipboard.writeText(ta.value);ok();}
+  catch(_){try{ta.focus();ta.select();document.execCommand('copy')?ok():fail();}catch(__){fail();}}
+});
+$('#printBtn').addEventListener('click',()=>{showPane(4,true);try{window.print();}catch(_){}});
+
+/* ---------- Inicio ---------- */
+$('#panelsA').innerHTML=panelA('L')+panelA('R');
+$('#panelB').innerHTML=panelB();
+$('#wrapA').innerHTML=buildTableA();
+$('#wrapB').innerHTML=buildTableB();
+$('#wrapC').innerHTML=buildTableC();
+$('#levels').innerHTML=[1,2,3,4].map(n=>`<div class="lv" data-level="${n}"><b>Puntuación ${LEVELS[n].range}</b><span><strong>${LEVELS[n].t}.</strong> ${LEVELS[n].d}</span></div>`).join('');
+syncInputs();
+showPane(1,true);
+render();
+})();
+</script>
+</body>
+</html>
