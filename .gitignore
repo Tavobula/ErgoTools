@@ -1,0 +1,5 @@
+# Local scratch / OS noise — nothing here is part of the published site.
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
